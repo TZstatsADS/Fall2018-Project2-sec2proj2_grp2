@@ -1,42 +1,66 @@
-library(shiny)
-library(leaflet)
+packages.used=c("shiny","ggmap","leaflet","dplyr","shinyBS","plotly","extrafont","grDevices","shinyjs")
 
-# Define UI for application that draws a histogram
-shinyUI(fluidPage(
+# check packages that need to be installed.
+packages.needed=setdiff(packages.used,intersect(installed.packages()[,1],packages.used))
+
+# install additional packages
+if(length(packages.needed)>0){
+  install.packages(packages.needed, dependencies = TRUE)
+}
+
+
+library(shiny)
+library(ggmap)
+library(leaflet)
+library(dplyr)
+library(shinyBS)
+library(plotly)
+library(extrafont)
+library(grDevices)
+library(shinyjs)
+library(shinythemes)
+
+
+
+
+
+
+
+
+ui <- navbarPage(theme=shinytheme("lumen"),
+  includeCSS("style.css"),
+    tabPanel(
+      title="Maps", icon=icon("map")),
+    tabPanel(
+      title="Comparison",icon=icon("balance-scale")),
+    tabPanel(
+      title="Recommendation System",icon=icon("thumbs-up"))
+  ,
+  fluidRow(
+    column(width=12,div(style="height:200px;"))),
+  fluidRow(
+    column(width=12,div(style="height:60px;",HTML('<center><img src="sc4.png" width="70"></center>')
+                        )
+  )),
+  fluidRow(
+    column(width=4,offset=4,div(style="height:70px;"),h1("NY Schools Hunter",align="center",style="color:white;font-family:Montserrat;")
+           )
+  ),
+  fluidRow(
+    column(width=4,offset=4,div(style="height:100px",p("Our project takes all available data on colleges and universities in New York State and creates a useful 
+                                                       shiny app that allows users to explore and compare schools based on user-specific filtering criteria. 
+                                                       The purpose of our design is to provide users with a 
+                                                       bird's eye view of New York colleges and universities; 
+                                                       allow them to filter, search, and group schools by their preferred criteria; 
+                                                       and further compare two schools on a more micro level.",align="center",style="color:#e6e6e6")))
+  )
+ 
+)
+
+
+
   
-  # Application title
-  titlePanel("2009 Manhattan Housing Sales"),
   
-  # Sidebar with a selector input for neighborhood
-  sidebarLayout(
-    sidebarPanel(
-      selectInput("nbhd", label = h5("Choose a Manhattan Neighborhood"), 
-                         choices = list("all neighborhoods"=0,
-                                        "Central Harlem"=1, 
-                                        "Chelsea and Clinton"=2,
-                                        "East Harlem"=3, 
-                                        "Gramercy Park and Murray Hill"=4,
-                                        "Greenwich Village and Soho"=5, 
-                                        "Lower Manhattan"=6,
-                                        "Lower East Side"=7, 
-                                        "Upper East Side"=8, 
-                                        "Upper West Side"=9,
-                                        "Inwood and Washington Heights"=10), 
-                         selected = 0)
-      #sliderInput("p.range", label=h3("Price Range (in thousands of dollars)"),
-      #            min = 0, max = 20000, value = c(200, 10000))
-    ),
-    # Show two panels
-    mainPanel(
-      #h4(textOutput("text")),
-      h3(code(textOutput("text1"))),
-      tabsetPanel(
-        # Panel 1 has three summary plots of sales. 
-        tabPanel("Sales summary", plotOutput("distPlot")), 
-        # Panel 2 has a map display of sales' distribution
-        tabPanel("Sales map", plotOutput("distPlot1"))),
-      leafletOutput("map", width = "80%", height = "400px")
-    )
- )
-))
+  
+  
 
