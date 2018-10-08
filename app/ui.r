@@ -136,14 +136,15 @@ ui <- navbarPage(theme=shinytheme("flatly"),
               actionButton("getschool",label="Search SCHOOL")
               
     )),
-                 column(width=6,wellPanel(dataTableOutput("uni")))
+                 column(width=5,titlePanel(tags$b("Summary Table",style="color:white;font-family:Franklin Gothic Medium;")),wellPanel(dataTableOutput("uni"),style="opacity:0.8;font-family;Montserrat;")),
+    column(width=3,div(style="height:50px"),
+           plotlyOutput("radarplot"))
                  
-      ),
-    fluidRow(column(width=5,offset=4,div(style="height:50px"),
-                        plotlyOutput("radarplot")))
+      )
+    )
     
    
-    ))
+    )
     
       
   

@@ -184,11 +184,12 @@ data_radar <- reactive({c(sat_score(),tuition(),crime())})
      marker=list(color="#8D8680",size=15,opacity=0.8,symbol="star",line=list(color="#8D8680",width=1)),
      
       r=data_radar(),
-      theta = c("SAT score","Tuition","Crime Rate"),
+      theta = c("SAT","Tuition","Crime Rate"),
       fill='toself',fillcolor='rgba(255,0,0,0.5')%>%
       layout(
         polar = list(bgcolor='rgba(0,0,0,0.5)',
           radialaxis = list(
+          
             linewidth=2,
             linecolor="white",
             tickwidth=2,
@@ -215,11 +216,13 @@ data_radar <- reactive({c(sat_score(),tuition(),crime())})
           line=list(color="#8D8680",width=2),
           marker=list(color="#8D8680",size=15,opacity=0.8,symbol="star",line=list(color="#8D8680",width=1)),
           r=data_radar(),
-          theta = c("SAT score","Tuition","Crime Rate"),
+          theta = c("SAT","Tuition","Crime Rate"),
           fill='toself',fillcolor='rgba(0,0,255,0.5')%>%
           layout(
             polar = list(bgcolor='rgba(0,0,0,0.5)',
+                        
                          radialaxis = list(
+                           
                            linewidth=2,
                            linecolor="white",
                            tickwidth=2,
