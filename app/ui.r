@@ -22,7 +22,13 @@ library(shinythemes)
 
 
 schooldata <- read.csv(file="final3data_with_tuition.csv",stringsAsFactors = FALSE)
-
+#Support data frames
+major = c("Agriculture","Natural Resources And Conservation", "Architecture And Related Services",
+          "Computer And Information Sciences And Support Services"," Education","Engineering"," Biological And Biomedical Sciences",
+          "Mathematics And Statistics", "Psychology","Social Sciences","Business, Management, Marketing, And Related Support Services","History")
+major.index =colnames(schooldata)[16:27]
+major.frame = data.frame(major = major, index = major.index)
+choicelist<-as.list(unique(as.data.frame(major.frame)[,2]))
 
 
 
@@ -54,7 +60,52 @@ ui <- navbarPage(theme=shinytheme("lumen"),
   
     
     tabPanel(
-      title="Maps", icon=icon("map")),
+      title="Maps", icon=icon("map"),
+      div(class="outer",  
+          # lealfet map
+          leafletOutput("my_map", width="100%", height= "700px"),
+          absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE,
+                        draggable = TRUE, top = 100, left = 5, bottom = "auto",
+                        width = "auto", height = "auto", cursor = "move",
+                        wellPanel(style = "overflow-y:scroll; max-height: 600px",
+                                  bsCollapse(id="collapse.filter",open="Filter", 
+                                             
+                                             bsCollapsePanel(tags$strong("Academic"),style="primary",
+                                                             tags$style(type="text/css",
+                                                                        ".shiny-output-error { visibility: hidden; }",
+                                                                        ".shiny-output-error:before { visibility: hidden; }"),
+                                                             fluidRow(column(12,checkboxGroupInput("filter","Major",choices=choicelist,selected=1))),
+                                                             fluidRow(column(10,sliderInput('SAT',label=h3('SAT Range'),min=800,max=1600,value=c(1200,1600))))),
+                                             
+                                             
+                                             
+                                             
+                                             bsCollapsePanel(tags$strong("Location Preference"),style = "primary",
+                                                             bsCollapsePanel(tags$strong("Citytype"),style="info",
+                                                                             fluidRow(column(10,selectInput("Citytype",tags$strong("Type prefer"),choices = c('Suburb','City','Town','Rural'),selected = "None"))
+                                                                             )
+                                                             ),
+                                                             bsCollapsePanel(tags$strong("CrimeRate"),style="info",
+                                                                             fluidRow(column(10,sliderInput("CrimeRate",label=h3('Crime Range'),min=0,max=1300,value=c(100,500))))
+                                                                             
+                                                             ),
+                                                             
+                                                             bsCollapsePanel(tags$strong("HappyScore"),style="info",  
+                                                                             fluidRow(column(10,sliderInput("HappyScore",tags$strong("Happy Score"),min=30,max=80,value=c(50,60))))
+                                                             )
+                                             )
+                                  ),                                                      
+                                  actionButton("search", tags$strong("Searching!"))
+                        )#WellPanel ends here
+                        
+          )
+          
+          
+          
+      )
+      ,div(class="footer", "Applied Data Science Fall18 Group 2")
+    ),
+  #Map ends here
     tabPanel(
       title="Comparison",icon=icon("balance-scale")),
     tabPanel(

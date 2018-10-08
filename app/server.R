@@ -22,6 +22,13 @@ library(shinyjs)
 
 
 schooldata <- read.csv(file="final3data_with_tuition.csv",stringsAsFactors = FALSE)
+#Support data frames
+major = c("Agriculture","Natural Resources And Conservation", "Architecture And Related Services",
+          "Computer And Information Sciences And Support Services"," Education","Engineering"," Biological And Biomedical Sciences",
+          "Mathematics And Statistics", "Psychology","Social Sciences","Business, Management, Marketing, And Related Support Services","History")
+major.index =colnames(schooldata)[16:27]
+major.frame = data.frame(major = major, index = major.index)
+
 
 #Convert City types into 1 and o (1 for city and 0 for not city)
 school1 <- schooldata %>% mutate(city_nocity=ifelse(schooldata$Citytype=='City',1,0))%>%
@@ -30,8 +37,131 @@ school1 <- schooldata %>% mutate(city_nocity=ifelse(schooldata$Citytype=='City',
 #Prepare font list for radar plot
 font1 <- list(family="Montserrat",size=16,color="white")
 
-server <- function(input, output){
+server <- function(input, output,session){
+##Map start here
+  Major<-reactive({
+    Major<-unlist(input$filter)
+  })
   
+  SAT<-reactive({
+    SAT<-input$SAT
+  })
+  
+  Citytype<-reactive({
+    Citytype<-input$Citytype
+  })
+  
+  CrimeRate<-reactive({
+    CrimeRate<-input$CrimeRate
+  })
+  
+  HappyScore<-reactive({
+    HappyScore<-input$HappyScore
+  })
+  
+  v1<-reactive({
+    
+    if (Major() == "") {
+      v1<-schooldata
+    } 
+    else {
+      v1 <- schooldata[(schooldata %>% select(Major()))>=1,]
+    }
+    
+  })
+  
+  
+  v2<- reactive({
+    V2 <- filter(v1(),
+                 as.numeric(SAT) >= SAT()[1] &
+                   as.numeric(SAT) <= SAT()[2])
+  })  
+  
+  
+  v3<- reactive({
+    if (Citytype() == "None") {
+      v3<- v2()} 
+    else {
+      v3<- filter(v2(), v2()$Citytype==Citytype()) 
+    }}) 
+  
+  
+  v4<- reactive({
+    v4 <- filter(v3(),
+                 as.numeric(CrimeRate) >= CrimeRate()[1] &
+                   as.numeric(CrimeRate) <= CrimeRate()[2]) 
+  }) 
+  
+  v5<- reactive({
+    v5 <- filter(v4(),
+                 as.numeric(HappyScore) >= HappyScore()[1] &
+                   as.numeric(HappyScore) <= HappyScore()[2]) 
+  })
+  
+  
+  
+  
+  
+  
+  
+  output$my_map <- renderLeaflet({
+    
+    
+    
+    #load icon
+    icon.ion <- makeAwesomeIcon(icon = "users", markerColor = "green",
+                                library = "ion")
+    
+    #
+    sub_data <- v5()
+    
+    
+    
+    if(nrow(sub_data) == 0){
+      
+      #load map
+      map = leaflet(sub_data) %>% setView(-98.35  , 39.48, zoom = 4) %>% 
+        #addTiles()%>% addTiles('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+        #                      attribution = paste(
+        #                       '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+        #                      '&copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+        #                   ))
+        addProviderTiles(providers$Esri.WorldStreetMap)
+      
+      
+      
+    }
+    
+    else{
+      
+      #data = head(arrange(airdata(),desc(frequency)), input$NumberofDestination)
+      
+      #load map
+      map = leaflet(sub_data) %>% setView(-98.35  , 39.48, zoom = 4) %>% 
+        #addTiles()%>% addTiles('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+        #                      attribution = paste(
+        #                       '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+        #                      '&copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+        #                   ))
+        addProviderTiles(providers$Esri.WorldStreetMap) %>%
+        addAwesomeMarkers(lng = v5()$Longitude, lat = v5()$Latitude, icon=icon.ion, popup = paste(v5()$Name,"         ;Rank:",v5()$Rank,sep="\n"),label=v5()$URL)
+      
+      
+      
+      
+      
+    }
+    
+    #add marker for dest in the map
+    # 
+    
+    
+    
+    
+  })  
+  
+  
+    
   #Recommendation System Plot
 legendtitle_1 <- list(yref='paper',xref="paper",y=1.05,x=1, text="City Radar Chart",showarrow=F)
 legendtitle_2 <- list(yref='paper',xref="paper",y=1.05,x=1, text="Not City Radar Chart",showarrow=F)
