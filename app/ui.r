@@ -122,6 +122,9 @@ ui <- navbarPage(theme=shinytheme("lumen"),
               sliderInput("crime",label=tags$b("Crime Rate (Per 100000 people)",style="color:black;font-family:Futura Bk BT;"),min=20,max=1300,value=600),
               
                 sliderInput("tuition", label=tags$b("Tuition (Per Year)",style="color:black;font-family:Futura Bk BT;"),min=10000,max=60000,value=30000),
+              
+              checkboxGroupInput("Major",label=tags$b("Major",style="color:black;font-family:Futura Bk BT;"),choices=choicelist,selected=1),
+              
               actionButton("getschool",label="WHAT'S YOUR SCHOOL"), dataTableOutput("uni")),style="opacity:0.8;font-family:Montserrat;"
               )),
                

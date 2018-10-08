@@ -22,6 +22,7 @@ library(shinyjs)
 
 
 schooldata <- read.csv(file="final3data_with_tuition.csv",stringsAsFactors = FALSE)
+
 #Support data frames
 major = c("Agriculture","Natural Resources And Conservation", "Architecture And Related Services",
           "Computer And Information Sciences And Support Services"," Education","Engineering"," Biological And Biomedical Sciences",
@@ -162,7 +163,7 @@ server <- function(input, output,session){
   
   
     
-  #Recommendation System Plot
+#Recommendation System Plot
 legendtitle_1 <- list(yref='paper',xref="paper",y=1.05,x=1, text="City Radar Chart",showarrow=F)
 legendtitle_2 <- list(yref='paper',xref="paper",y=1.05,x=1, text="Not City Radar Chart",showarrow=F)
 
@@ -241,20 +242,24 @@ city1 <- reactive(if(input$city=="City"){city1 <- 1}
 satscore1 <- reactive({satscore <- input$satscore})
 tuition1 <- reactive({tuition <- input$tuition})
 crime1 <- reactive({crime <- input$crime})
+Major <- reactive({Major<-unlist(input$Major)})
 
-d1 <- reactive({d1 <- filter(school1, as.numeric(SAT)<= satscore1())})
-d2 <- reactive({d2 <- filter(d1(), as.numeric(CrimeRate) <= crime1())})
-d3 <- reactive({d3 <- filter(d2(),as.numeric(gsub('\\$|,', '', Tuition.and.fees.y)) <= tuition1())})
-d4 <- reactive({ if (city1() == 1){d4 <- filter(d3(),as.numeric(city_nocity)==1)}
-   else{d4 <- filter(d3(),as.numeric(city_nocity)==0)} })
+d1<-reactive({if (Major() == "") {d1<-school1} 
+  else {d1 <- school1[(school1 %>% select(Major()))>=1,]}})
+d2 <- reactive({d2 <- filter(d1(), as.numeric(SAT)<= satscore1())})
+d3 <- reactive({d3 <- filter(d2(), as.numeric(CrimeRate) <= crime1())})
+d4 <- reactive({d4 <- filter(d3(),as.numeric(gsub('\\$|,', '', Tuition.and.fees.y)) <= tuition1())})
+d5 <- reactive({ if (city1() == 1){d5 <- filter(d4(),as.numeric(city_nocity)==1)}
+   else{d5 <- filter(d4(),as.numeric(city_nocity)==0)} })
+
 
 observeEvent(input$getschool,{
   output$uni <- DT::renderDataTable({
   
    school_dt <-
       subset(
-        d4(),
-        #d4(),
+        d5(),
+        #d5(),
         select = c(
           "Name",
           "SAT",
