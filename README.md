@@ -1,34 +1,22 @@
-# Project 2: Shiny App Development Version 2.0
-
-### [Project Description](doc/project2_desc.md)
+# Project 2: Shiny App Development Version 2.0: NY Schools Hunter
 
 ![screenshot](doc/screenshot2.png)
 
 In this second project of GR5243 Applied Data Science, we develop a version 2.0 of an *Exploratory Data Analysis and Visualization* shiny app on a topic of your choice using [NYC Open Data](https://opendata.cityofnewyork.us/) or U.S. government open data released on the [data.gov](https://data.gov/) website. See [Project 2 Description](doc/project2_desc.md) for more details.  
 
-The **learning goals** for this project is:
+### [Project Description](doc/project2_desc.md)
 
-- business intelligence for data science
-- study legacy codes and further development
-- data cleaning
-- data visualization
-- systems development/design life cycle
-- shiny app/shiny server
+Term: Fall 2018
 
-*The above general statement about project 2 can be removed once you are finished with your project. It is optional.
++ Team 2
++ **NY Schools Hunter**: + Team members:
+	+  Cai, Yang yc3404@columbia.edu
+	+  Chen, Yang yc3335@columbia.edu
+	+  Sehgal, Atishay as5453@columbia.edu -Presenter
+	+  Zhong, Chenzhong cz2486@columbia.edu
+	+  Zhong, Qingyang qz2317@columbia.edu
 
-## Project Title Lorem ipsum dolor sit amet
-Term: Spring 2018
-
-+ Team #
-+ **Projec title**: + Team members
-	+ team member 1
-	+ team member 2
-	+ team member 3
-	+ team member 4
-	+ team member 5
-
-+ **Project summary**: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
++ **Project summary**:In this project we develop a version 2.0 of an *Exploratory Data Analysis and Visualization* shiny app on a topic of New York school. Our project takes all available data on colleges and universities in New York State and creates a useful shiny app that allows users to explore and compare schools based on user-specific filtering criteria. The purpose of our design is to provide users with a bird's eye view of New York colleges and universities; allow them to filter, search, and group schools by their preferred criteria; and further compare two schools on a more micro level.
 
 + **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
 
