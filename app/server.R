@@ -242,10 +242,10 @@ city1 <- reactive(if(input$city=="City"){city1 <- 1}
 satscore1 <- reactive({satscore <- input$satscore})
 tuition1 <- reactive({tuition <- input$tuition})
 crime1 <- reactive({crime <- input$crime})
-Major <- reactive({Major<-unlist(input$Major)})
+Major1 <- reactive({Major<-unlist(input$Major)})
 
-d1<-reactive({if (Major() == "") {d1<-school1} 
-  else {d1 <- school1[(school1 %>% select(Major()))>=1,]}})
+d1<-reactive({if (Major1() == "") {d1<-school1} 
+  else {d1 <- school1[(school1 %>% select(Major1()))>=1,]}})
 d2 <- reactive({d2 <- filter(d1(), as.numeric(SAT)<= satscore1())})
 d3 <- reactive({d3 <- filter(d2(), as.numeric(CrimeRate) <= crime1())})
 d4 <- reactive({d4 <- filter(d3(),as.numeric(gsub('\\$|,', '', Tuition.and.fees.y)) <= tuition1())})

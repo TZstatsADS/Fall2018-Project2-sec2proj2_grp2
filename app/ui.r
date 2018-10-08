@@ -33,20 +33,18 @@ choicelist<-as.list(unique(as.data.frame(major.frame)[,2]))
 
 
 
-ui <- navbarPage(theme=shinytheme("lumen"),
+ui <- navbarPage(theme=shinytheme("flatly"),
   includeCSS("style.css"),
     tabPanel(
       title="Home",icon=icon("home"),
       fluidRow(
-        column(width=12,div(style="height:200px;"))),
-      fluidRow(
-        column(width=12,div(style="height:60px;",HTML('<center><img src="sc4.png" width="70"></center>')
-        )
-        )),
+        column(width=12,div(style="height:100px;"))),
+
       fluidRow(
         column(width=4,offset=4,div(style="height:70px;"),h1("NY Schools Hunter",align="center",style="color:white;font-family:Montserrat;")
         )
       ),
+      fluidRow(column(width=12,div(style="height:30px;"))),
       fluidRow(
         column(width=4,offset=4,div(style="height:100px",p("Our project takes all available data on colleges and universities in New York State and creates a useful 
                                                            shiny app that allows users to explore and compare schools based on user-specific filtering criteria. 
@@ -54,7 +52,8 @@ ui <- navbarPage(theme=shinytheme("lumen"),
                                                            bird's eye view of New York colleges and universities; 
                                                            allow them to filter, search, and group schools by their preferred criteria; 
                                                            and further compare two schools on a more micro level.",align="center",style="color:#e6e6e6")))
-        )
+        ),
+      fluidRow(column(width=12,div(style="height:100px;")))
       
         ),
   
@@ -65,33 +64,34 @@ ui <- navbarPage(theme=shinytheme("lumen"),
           # lealfet map
           leafletOutput("my_map", width="100%", height= "700px"),
           absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE,
+                        style="opacity:0.8;font-family:Montserrat;",
                         draggable = TRUE, top = 100, left = 5, bottom = "auto",
                         width = "auto", height = "auto", cursor = "move",
                         wellPanel(style = "overflow-y:scroll; max-height: 600px",
                                   bsCollapse(id="collapse.filter",open="Filter", 
                                              
-                                             bsCollapsePanel(tags$strong("Academic"),style="primary",
+                                             bsCollapsePanel(tags$strong("Academic",style="font-family:Franklin Gothic Medium;"),style="primary",
                                                              tags$style(type="text/css",
                                                                         ".shiny-output-error { visibility: hidden; }",
                                                                         ".shiny-output-error:before { visibility: hidden; }"),
-                                                             fluidRow(column(12,checkboxGroupInput("filter","Major",choices=choicelist,selected=1))),
-                                                             fluidRow(column(10,sliderInput('SAT',label=h3('SAT Range'),min=800,max=1600,value=c(1200,1600))))),
+                                                             fluidRow(column(12,checkboxGroupInput("filter",tags$b("Major",style="font-family:Franklin Gothic Medium;"),choices=choicelist,selected=1))),
+                                                             fluidRow(column(10,sliderInput('SAT',label=tags$b('SAT Range',style="font-family:Franklin Gothic Medium;"),min=800,max=1600,value=c(1200,1600))))),
                                              
                                              
                                              
                                              
-                                             bsCollapsePanel(tags$strong("Location Preference"),style = "primary",
-                                                             bsCollapsePanel(tags$strong("Citytype"),style="info",
-                                                                             fluidRow(column(10,selectInput("Citytype",tags$strong("Type prefer"),choices = c('Suburb','City','Town','Rural'),selected = "None"))
+                                             bsCollapsePanel(tags$strong("Location Preference",style="font-family:Franklin Gothic Medium;"),style = "primary",
+                                                             bsCollapsePanel(tags$strong("City Type",style="font-family:Franklin Gothic Medium;"),style="info",
+                                                                             fluidRow(column(10,selectInput("Citytype",tags$strong("Type prefer",style="font-family:Franklin Gothic Medium;"),choices = c('Suburb','City','Town','Rural'),selected = "None"))
                                                                              )
                                                              ),
-                                                             bsCollapsePanel(tags$strong("CrimeRate"),style="info",
-                                                                             fluidRow(column(10,sliderInput("CrimeRate",label=h3('Crime Range'),min=0,max=1300,value=c(100,500))))
+                                                             bsCollapsePanel(tags$strong("Crime Rate",style="font-family:Franklin Gothic Medium;"),style="info",
+                                                                             fluidRow(column(10,sliderInput("CrimeRate",label=tags$b('Crime Range',style="font-family:Franklin Gothic Medium;"),min=0,max=1300,value=c(100,500))))
                                                                              
                                                              ),
                                                              
-                                                             bsCollapsePanel(tags$strong("HappyScore"),style="info",  
-                                                                             fluidRow(column(10,sliderInput("HappyScore",tags$strong("Happy Score"),min=30,max=80,value=c(50,60))))
+                                                             bsCollapsePanel(tags$strong("Happy Score",style="font-family:Franklin Gothic Medium;"),style="info",  
+                                                                             fluidRow(column(10,sliderInput("HappyScore",tags$strong("Happy Score",style="font-family:Franklin Gothic Medium;"),min=30,max=80,value=c(50,60))))
                                                              )
                                              )
                                   ),                                                      
@@ -110,27 +110,41 @@ ui <- navbarPage(theme=shinytheme("lumen"),
       title="Comparison",icon=icon("balance-scale")),
     tabPanel(
       title="Recommendation System",icon=icon("thumbs-up"),
+      fluidRow(
+                column(width=2,style="padding:0px;",
+                                 
+              
+                            
+                wellPanel(top=50,style="opacity:0.8;font-family:Montserrat;",
+                 h3("Select Filters",style="color:black;font-family:Montserrat;"),
+              sliderInput("satscore",label=tags$b("SAT Score",style="color:black;font-family:Franklin Gothic Medium;"),min=400, max=1600, value=1000,step=10),
+              br(),
+              
+               selectInput("city",label=tags$b("Located in city/rural",style="color:black;font-family:Franklin Gothic Medium;"),choices=c("City","Not City")),
+              br(),
+              
+              sliderInput("crime",label=tags$b("Crime Rate (Per 100000 people)",style="color:black;font-family:Franklin Gothic Medium;"),min=20,max=1300,value=600),
+              br(),
+                sliderInput("tuition", label=tags$b("Tuition (Per Year)",style="color:black;font-family:Franklin Gothic Medium;"),min=10000,max=60000,value=30000))),
       
-                 fluidRow(column(width=3,
-              absolutePanel(width=550,
-                wellPanel(
-                  h3("SELECT FILTERS",style="color:black;font-family:Futura Md BT;"),
-              sliderInput("satscore",label=tags$b("SAT Score",style="color:black;font-family:Futura Bk BT;"),min=400, max=1600, value=1000,step=10),
+              column(width=2, style="padding:0px;",
+                     
+              wellPanel(top=50,style="opacity:0.8;font-family:Montserrat;",
+             
+              checkboxGroupInput("Major",label=tags$b("Major",style="color:black;font-family:Franklin Gothic Medium;"),choices=choicelist,selected=1),
               
-               selectInput("city",label=tags$b("Located in city/rural",style="color:black;font-family:Futura Bk BT;"),choices=c("City","Not City")),
+              actionButton("getschool",label="Search SCHOOL")
               
-              sliderInput("crime",label=tags$b("Crime Rate (Per 100000 people)",style="color:black;font-family:Futura Bk BT;"),min=20,max=1300,value=600),
-              
-                sliderInput("tuition", label=tags$b("Tuition (Per Year)",style="color:black;font-family:Futura Bk BT;"),min=10000,max=60000,value=30000),
-              
-              checkboxGroupInput("Major",label=tags$b("Major",style="color:black;font-family:Futura Bk BT;"),choices=choicelist,selected=1),
-              
-              actionButton("getschool",label="WHAT'S YOUR SCHOOL"), dataTableOutput("uni")),style="opacity:0.8;font-family:Montserrat;"
-              )),
-               
-                 column(width=8,div(style="height:50px"),
-                 plotlyOutput("radarplot"))
-      )))
+    )),
+                 column(width=6,wellPanel(dataTableOutput("uni")))
+                 
+      ),
+    fluidRow(column(width=5,offset=4,div(style="height:50px"),
+                        plotlyOutput("radarplot")))
+    
+   
+    ))
+    
       
   
   
