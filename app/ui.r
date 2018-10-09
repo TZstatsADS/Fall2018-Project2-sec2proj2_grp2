@@ -1,3 +1,5 @@
+#UI part
+
 packages.used=c("DT","shiny","ggmap","leaflet","dplyr","shinyBS","plotly","extrafont","grDevices","shinyjs")
 
 # check packages that need to be installed.
@@ -20,7 +22,6 @@ library(grDevices)
 library(shinyjs)
 library(shinythemes)
 
-
 schooldata <- read.csv(file="final3data_with_tuition.csv",stringsAsFactors = FALSE)
 #Support data frames
 major = c("Agriculture","Natural Resources And Conservation", "Architecture And Related Services",
@@ -30,9 +31,7 @@ major.index =colnames(schooldata)[16:27]
 major.frame = data.frame(major = major, index = major.index)
 choicelist<-as.list(unique(as.data.frame(major.frame)[,2]))
 
-
-
-
+#Homepage
 ui <- navbarPage(theme=shinytheme("flatly"),
   includeCSS("style.css"),
     tabPanel(
@@ -57,7 +56,7 @@ ui <- navbarPage(theme=shinytheme("flatly"),
       
         ),
   
-    
+#Map 
     tabPanel(
       title="Maps", icon=icon("map"),
       div(class="outer",  
@@ -103,47 +102,63 @@ ui <- navbarPage(theme=shinytheme("flatly"),
           
           
       )
-      ,div(class="footer", "Applied Data Science Fall18 Group 2")
+     
     ),
-  #Map ends here
+
+#Comparison
     tabPanel(
       title="Comparison",icon=icon("balance-scale")),
+
+#Recommendation
     tabPanel(
       title="Recommendation System",icon=icon("thumbs-up"),
-      fluidRow(
+     
+       fluidRow(
                 column(width=2,style="padding:0px;",
-                                 
-              
-                            
-                wellPanel(top=50,style="opacity:0.8;font-family:Montserrat;",
-                 h3("Select Filters",style="color:black;font-family:Montserrat;"),
-              sliderInput("satscore",label=tags$b("SAT Score",style="color:black;font-family:Franklin Gothic Medium;"),min=400, max=1600, value=1000,step=10),
-              br(),
-              
-               selectInput("city",label=tags$b("Located in city/rural",style="color:black;font-family:Franklin Gothic Medium;"),choices=c("City","Not City")),
-              br(),
-              
-              sliderInput("crime",label=tags$b("Crime Rate (Per 100000 people)",style="color:black;font-family:Franklin Gothic Medium;"),min=20,max=1300,value=600),
-              br(),
-                sliderInput("tuition", label=tags$b("Tuition (Per Year)",style="color:black;font-family:Franklin Gothic Medium;"),min=10000,max=60000,value=30000))),
-      
-              column(width=2, style="padding:0px;",
-                     
-              wellPanel(top=50,style="opacity:0.8;font-family:Montserrat;",
+                       
+                      wellPanel(top=50,style="opacity:0.8;font-family:Montserrat;",
+                          
+                      h3("Select Filters",style="color:black;font-family:Franklin Gothic Medium;"),
              
-              checkboxGroupInput("Major",label=tags$b("Major",style="color:black;font-family:Franklin Gothic Medium;"),choices=choicelist,selected=1),
+                      sliderInput("satscore",label=tags$b("SAT Score",style="color:black;font-family:Franklin Gothic Medium;"),min=400, max=1600, value=1000,step=10),
+                      br(),
               
-              actionButton("getschool",label="Search SCHOOL")
+                      selectInput("city",label=tags$b("Located in city/rural",style="color:black;font-family:Franklin Gothic Medium;"),choices=c("City","Not City")),
+                      br(),
+              
+                      sliderInput("crime",label=tags$b("Crime Rate (Per 100000 people)",style="color:black;font-family:Franklin Gothic Medium;"),min=20,max=1300,value=600),
+                      br(),
+                 
+                      sliderInput("tuition", label=tags$b("Tuition (Per Year)",style="color:black;font-family:Franklin Gothic Medium;"),min=10000,max=60000,value=30000)),
+      
+                      wellPanel(top=50,style="opacity:0.8;font-family:Montserrat;",
+                               
+                      h3("Instruction",style="color:black;font-family:Franklin Gothic Medium;"),
+                      
+                      h6("This is a system designed for finding your perfect school, choose your SAT score, your preference of the location of university, the maximum crime rate(per 100000 people) and tuition(per year) you can accept, and your preference of major. Then hit the search SCHOOL button to get matched school in the summary table.", style="color:grey;font-family:Franklin Gothic Medium;"))),
+              
+               column(width=2, style="padding:0px;",
+                     
+                      wellPanel(top=50,style="opacity:0.8;font-family:Montserrat;",
+             
+                      checkboxGroupInput("Major",label=tags$b("Major",style="color:black;font-family:Franklin Gothic Medium;"),choices=choicelist,selected=1),
+              
+                      actionButton("getschool",label="Search SCHOOL")
               
     )),
-                 column(width=5,titlePanel(tags$b("Summary Table",style="color:white;font-family:Franklin Gothic Medium;")),wellPanel(dataTableOutput("uni"),style="opacity:0.8;font-family;Montserrat;")),
-    column(width=3,div(style="height:50px"),
-           plotlyOutput("radarplot"))
+               column(width=5,titlePanel(tags$b("Summary Table",style="color:white;font-family:Franklin Gothic Medium;")),
+                      
+                      wellPanel(dataTableOutput("uni"),style="opacity:0.8;font-family;Montserrat;")),
+   
+               column(width=3,div(style="height:50px"),
+          
+                      plotlyOutput("radarplot"))
                  
       )
+    
     )
     
-   
+  ,div(class="footer", "Applied Data Science Fall18 Group 2")
     )
     
       
