@@ -99,7 +99,7 @@ ui <- navbarPage(theme=shinytheme("flatly"),
                                                                              fluidRow(column(10,sliderInput("HappyScore",tags$strong("Happy Score",style="font-family:Raleway;"),min=30,max=80,value=c(50,60))))
                                                              )),
                                                              
-                                            bsCollapsePanel(tags$strong("College requirment",style="font-family:Raleway;"),style = "primary",
+                                            bsCollapsePanel(tags$strong("College Requirements",style="font-family:Raleway;"),style = "primary",
                                                              
                                                              bsCollapsePanel(tags$strong("Tuition",style="font-family:Raleway;"),style="info",  
                                                                              fluidRow(column(10,sliderInput("Tuition.and.fees.y",tags$strong("Tuition",style="font-family:Raleway;"),min=5300,max=55056,value=c(5300,55000))))
@@ -109,7 +109,12 @@ ui <- navbarPage(theme=shinytheme("flatly"),
                                                                              fluidRow(column(10,sliderInput("ADMRate",tags$strong("Admission Rate",style="font-family:Raleway;"),min=0.04,max=0.96,value=c(0.04,0.96))))
                                                              )
                                             
-                                             )
+                                             ),
+                                            
+                                            bsCollapsePanel(tags$strong("Rank",style="font-family:Raleway;"),style="info",
+                                                            fluidRow(column(10,checkboxGroupInput("Rank",tags$strong("Preference",style="font-family:Raleway;"),choices = c('Top 5','Top 10','Top 20','Top 50'),selected = "None"))
+                                                            )
+                                            )
                                              
                                              
                                              

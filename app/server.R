@@ -33,6 +33,7 @@ major = c("Agriculture","Natural Resources And Conservation", "Architecture And 
 major.index =colnames(schooldata)[16:27]
 major.frame = data.frame(major = major, index = major.index)
 
+schooldata$Tuition.and.fees.y <- as.numeric(currency(schooldata$Tuition.and.fees.y))
 schooldata$ADMrate <- round(ifelse(schooldata$ADMrate == "NULL", mean(as.numeric(schooldata$ADMrate),na.rm = TRUE),as.numeric(schooldata$ADMrate)),3)
 
 #Convert City types into 1 and o (1 for city and 0 for not city)
