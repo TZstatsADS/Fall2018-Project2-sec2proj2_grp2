@@ -94,7 +94,9 @@ ui <- navbarPage(theme=shinytheme("flatly"),
                                                              
                                                              bsCollapsePanel(tags$strong("Happy Score",style="font-family:Raleway;"),style="info",  
                                                                              fluidRow(column(10,sliderInput("HappyScore",tags$strong("Happy Score",style="font-family:Raleway;"),min=30,max=80,value=c(50,60))))
-                                                             ),
+                                                             )),
+                                                             
+                                            bsCollapsePanel(tags$strong("College requirment",style="font-family:Raleway;"),style = "primary",
                                                              
                                                              bsCollapsePanel(tags$strong("Tuition",style="font-family:Raleway;"),style="info",  
                                                                              fluidRow(column(10,sliderInput("Tuition",tags$strong("Tuition",style="font-family:Raleway;"),min=min(as.numeric(currency(schooldata$Tuition.and.fees.y))),max=max(as.numeric(currency(schooldata$Tuition.and.fees.y))),value=c(50,60))))
@@ -103,6 +105,7 @@ ui <- navbarPage(theme=shinytheme("flatly"),
                                                              bsCollapsePanel(tags$strong("Admission Rate",style="font-family:Raleway;"),style="info",  
                                                                              fluidRow(column(10,sliderInput("AdmissionRate",tags$strong("Admission Rate",style="font-family:Raleway;"),min=0.04,max=0.96,value=c(0.04,0.16))))
                                                              )
+                                            
                                              )
                                              
                                              
@@ -126,14 +129,14 @@ ui <- navbarPage(theme=shinytheme("flatly"),
       fluidRow(column(width=5,wellPanel(style="opacity:0.8;font-family:Montserrat;",
                                         tags$b("School A"),
                                         selectInput("sname_a",label=tags$b("Name",style="font-family:Raleway"),choices=namelist),
-                                        #imageOutput("logo_a",height = "400", width = "400"),
+                                        imageOutput("logo_a",height = "100", width = "100"),
                                         dataTableOutput("comp_a")
                                         
                                         )),
               column(width=5,offset=2,wellPanel(style="opacity:0.8;font-family:Montserrat;",
                                        tags$b("School B"),
                                        selectInput("sname_b",label=tags$b("Name",style="font-family:Raleway"),choices=namelist),
-                                       #imageOutput("logo_b",height = "400", width = "400"),
+                                       imageOutput("logo_b",height = "100", width = "100"),
                                        dataTableOutput("comp_b")))
                          )),
      

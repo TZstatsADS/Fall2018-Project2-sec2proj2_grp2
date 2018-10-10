@@ -185,23 +185,23 @@ server <- function(input, output,session){
   })  
   
 ##Comparison starts here
-  # output$logo_a = renderImage({
-  #   my_schools_file <- input$sname_a
-  #   regex_image <- ".png"
-  #   filename <- normalizePath(file.path(
-  #     paste("../output/www/",my_schools_file, regex_image, sep = "")))
-  #   
-  #   list(src=filename)
-  # },deleteFile = FALSE)
-  # 
-  # output$logo_b = renderImage({
-  #   my_schools_file <- input$sname_b
-  #   regex_image <- ".png"
-  #   filename <- normalizePath(file.path(
-  #     paste("../output/www/",my_schools_file, regex_image, sep = "")))
-  #   
-  #   list(src=filename)
-  # },deleteFile = FALSE)
+   output$logo_a = renderImage({
+     my_schools_file <- input$sname_a
+     regex_image <- ".jpg"
+     filename <- normalizePath(file.path(
+       paste("../app/www/logos/",my_schools_file, regex_image, sep = "")))
+     
+     list(src=filename)
+   },deleteFile = FALSE)
+   
+   output$logo_b = renderImage({
+     my_schools_file <- input$sname_b
+     regex_image <- ".jpg"
+     filename <- normalizePath(file.path(
+       paste("../app/www/logos/",my_schools_file, regex_image, sep = "")))
+     
+     list(src=filename)
+   },deleteFile = FALSE)
 
   name1 <- reactive({input$sname_a})
   name2 <- reactive({input$sname_b})
