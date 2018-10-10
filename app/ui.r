@@ -33,6 +33,9 @@ major.frame = data.frame(major = major, index = major.index)
 choicelist<-as.list(unique(as.data.frame(major.frame)[,2]))
 namelist <- as.list(schooldata$Name)
 
+schooldata$Tuition.and.fees.y <- as.numeric(currency(schooldata$Tuition.and.fees.y))
+schooldata$ADMrate <- round(ifelse(schooldata$ADMrate == "NULL", mean(as.numeric(schooldata$ADMrate),na.rm = TRUE),as.numeric(schooldata$ADMrate)),3)
+
 #Homepage
 ui <- navbarPage(theme=shinytheme("flatly"),
   includeCSS("style.css"),
@@ -99,11 +102,11 @@ ui <- navbarPage(theme=shinytheme("flatly"),
                                             bsCollapsePanel(tags$strong("College requirment",style="font-family:Raleway;"),style = "primary",
                                                              
                                                              bsCollapsePanel(tags$strong("Tuition",style="font-family:Raleway;"),style="info",  
-                                                                             fluidRow(column(10,sliderInput("Tuition",tags$strong("Tuition",style="font-family:Raleway;"),min=min(as.numeric(currency(schooldata$Tuition.and.fees.y))),max=max(as.numeric(currency(schooldata$Tuition.and.fees.y))),value=c(50,60))))
+                                                                             fluidRow(column(10,sliderInput("Tuition.and.fees.y",tags$strong("Tuition",style="font-family:Raleway;"),min=5300,max=55056,value=c(5300,55000))))
                                                              ),
                                                              
                                                              bsCollapsePanel(tags$strong("Admission Rate",style="font-family:Raleway;"),style="info",  
-                                                                             fluidRow(column(10,sliderInput("AdmissionRate",tags$strong("Admission Rate",style="font-family:Raleway;"),min=0.04,max=0.96,value=c(0.04,0.16))))
+                                                                             fluidRow(column(10,sliderInput("ADMRate",tags$strong("Admission Rate",style="font-family:Raleway;"),min=0.04,max=0.96,value=c(0.04,0.96))))
                                                              )
                                             
                                              )

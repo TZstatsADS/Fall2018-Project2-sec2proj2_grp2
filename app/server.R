@@ -33,6 +33,7 @@ major = c("Agriculture","Natural Resources And Conservation", "Architecture And 
 major.index =colnames(schooldata)[16:27]
 major.frame = data.frame(major = major, index = major.index)
 
+schooldata$ADMrate <- round(ifelse(schooldata$ADMrate == "NULL", mean(as.numeric(schooldata$ADMrate),na.rm = TRUE),as.numeric(schooldata$ADMrate)),3)
 
 #Convert City types into 1 and o (1 for city and 0 for not city)
 school1 <- schooldata %>% mutate(city_nocity=ifelse(schooldata$Citytype=='City',1,0))%>%
@@ -63,12 +64,14 @@ server <- function(input, output,session){
     HappyScore<-input$HappyScore
   })
   
-  Tuition<-reactive({
-    Tuition<-input$Tuition.and.fees.y
+  ADMRate<-reactive({
+    ADMRate<-input$ADMRate
+  
   })
   
-  AdmissionRate<-reactive({
-    AdmissionRate<-input$ADMRate
+  Tuition.and.fees.y<-reactive({
+    Tuition.and.fees.y<-input$Tuition.and.fees.y
+    
   })
   
   v1<-reactive({
@@ -84,7 +87,7 @@ server <- function(input, output,session){
   
   
   v2<- reactive({
-    V2 <- filter(v1(),
+    v2 <- filter(v1(),
                  as.numeric(SAT) >= SAT()[1] &
                    as.numeric(SAT) <= SAT()[2])
   })  
@@ -112,14 +115,15 @@ server <- function(input, output,session){
   
   v6<- reactive({
     v6 <- filter(v5(),
-                 currency(Tuition) >= Tuition()[1] &
-                   currency(Tuition) <= Tuition()[2]) 
+                 as.numeric(ADMRate) >= ADMRate()[1] &
+                   as.numeric(ADMRate) <= ADMRate()[2])  
   })
   
   v7<- reactive({
     v7 <- filter(v6(),
-                 as.numeric(AdmissionRate) >= AdmissionRate()[1] &
-                   as.numeric(AdmissionRate) <= AdmissionRate()[2]) 
+                 Tuition.and.fees.y >= Tuition.and.fees.y()[1] &
+                   Tuition.and.fees.y <= Tuition.and.fees.y()[2])
+  
   })
   
   
@@ -137,7 +141,7 @@ server <- function(input, output,session){
                                 library = "ion")
     
     #
-    sub_data <- v5()
+    sub_data <- v7()
     
     
     
@@ -168,7 +172,7 @@ server <- function(input, output,session){
         #                      '&copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
         #                   ))
         addProviderTiles(providers$Esri.WorldStreetMap) %>%
-        addAwesomeMarkers(lng = v5()$Longitude, lat = v5()$Latitude, icon=icon.ion, popup = paste(v5()$Name,"         ;Rank:",v5()$Rank,sep="\n"),label=v5()$URL)
+        addAwesomeMarkers(lng = v7()$Longitude, lat = v7()$Latitude, icon=icon.ion, popup = paste(v7()$Name,"         ;Rank:",v7()$Rank,sep="\n"),label=v7()$URL)
       
       
       
