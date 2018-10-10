@@ -1,4 +1,4 @@
-packages.used=c("DT","shiny","ggmap","leaflet","dplyr","shinyBS","plotly","extrafont","grDevices","shinyjs")
+packages.used=c("DT","shiny","ggmap","leaflet","dplyr","shinyBS","plotly","extrafont","grDevices","shinyjs", "formattable")
 
 # check packages that need to be installed.
 packages.needed=setdiff(packages.used,intersect(installed.packages()[,1],packages.used))
@@ -18,6 +18,7 @@ library(plotly)
 library(extrafont)
 library(grDevices)
 library(shinyjs)
+library(formattable)
 
 #Read in Files
 
@@ -38,7 +39,7 @@ school1 <- schooldata %>% mutate(city_nocity=ifelse(schooldata$Citytype=='City',
   mutate(c_nc=ifelse(city_nocity==1,"City","Not City"))
 
 #Prepare font list for radar plot
-font1 <- list(family="Montserrat",size=16,color="white")
+font1 <- list(family="Raleway",size=16,color="white")
 
 server <- function(input, output,session){
 ##Map start here
@@ -60,6 +61,14 @@ server <- function(input, output,session){
   
   HappyScore<-reactive({
     HappyScore<-input$HappyScore
+  })
+  
+  Tuition<-reactive({
+    Tuition<-input$Tuition.and.fees.y
+  })
+  
+  AdmissionRate<-reactive({
+    AdmissionRate<-input$ADMRate
   })
   
   v1<-reactive({
@@ -99,6 +108,18 @@ server <- function(input, output,session){
     v5 <- filter(v4(),
                  as.numeric(HappyScore) >= HappyScore()[1] &
                    as.numeric(HappyScore) <= HappyScore()[2]) 
+  })
+  
+  v6<- reactive({
+    v6 <- filter(v5(),
+                 currency(Tuition) >= Tuition()[1] &
+                   currency(Tuition) <= Tuition()[2]) 
+  })
+  
+  v7<- reactive({
+    v7 <- filter(v6(),
+                 as.numeric(AdmissionRate) >= AdmissionRate()[1] &
+                   as.numeric(AdmissionRate) <= AdmissionRate()[2]) 
   })
   
   

@@ -1,6 +1,6 @@
 #UI part
 
-packages.used=c("DT","shiny","ggmap","leaflet","dplyr","shinyBS","plotly","extrafont","grDevices","shinyjs")
+packages.used=c("DT","shiny","ggmap","leaflet","dplyr","shinyBS","plotly","extrafont","grDevices","shinyjs","formattable")
 
 # check packages that need to be installed.
 packages.needed=setdiff(packages.used,intersect(installed.packages()[,1],packages.used))
@@ -21,6 +21,7 @@ library(extrafont)
 library(grDevices)
 library(shinyjs)
 library(shinythemes)
+library(formattable)
 
 schooldata <- read.csv(file="final3data_with_tuition.csv",stringsAsFactors = FALSE)
 #Support data frames
@@ -65,38 +66,49 @@ ui <- navbarPage(theme=shinytheme("flatly"),
           # lealfet map
           leafletOutput("my_map", width="100%", height= "700px"),
           absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE,
-                        style="opacity:0.8;font-family:Montserrat;",
+                        style="opacity:0.75;font-family:Raleway;",
                         draggable = TRUE, top = 100, left = 5, bottom = "auto",
                         width = "auto", height = "auto", cursor = "move",
                         wellPanel(style = "overflow-y:scroll; max-height: 600px",
                                   bsCollapse(id="collapse.filter",open="Filter", 
                                              
-                                             bsCollapsePanel(tags$strong("Academic",style="font-family:Franklin Gothic Medium;"),style="primary",
+                                             bsCollapsePanel(tags$strong("Academic",style="font-family:Raleway;"),style="primary",
                                                              tags$style(type="text/css",
                                                                         ".shiny-output-error { visibility: hidden; }",
                                                                         ".shiny-output-error:before { visibility: hidden; }"),
-                                                             fluidRow(column(12,checkboxGroupInput("filter",tags$b("Major",style="font-family:Franklin Gothic Medium;"),choices=choicelist,selected=1))),
-                                                             fluidRow(column(10,sliderInput('SAT',label=tags$b('SAT Range',style="font-family:Franklin Gothic Medium;"),min=800,max=1600,value=c(1200,1600))))),
+                                                             fluidRow(column(12,checkboxGroupInput("filter",tags$b("Major",style="font-family:Raleway;"),choices=choicelist,selected=1))),
+                                                             fluidRow(column(10,sliderInput('SAT',label=tags$b('SAT Range',style="font-family:Raleway;"),min=800,max=1600,value=c(1200,1600))))),
                                              
                                              
                                              
                                              
-                                             bsCollapsePanel(tags$strong("Location Preference",style="font-family:Franklin Gothic Medium;"),style = "primary",
-                                                             bsCollapsePanel(tags$strong("City Type",style="font-family:Franklin Gothic Medium;"),style="info",
-                                                                             fluidRow(column(10,selectInput("Citytype",tags$strong("Type prefer",style="font-family:Franklin Gothic Medium;"),choices = c('Suburb','City','Town','Rural'),selected = "None"))
+                                             bsCollapsePanel(tags$strong("Location Preference",style="font-family:Raleway;"),style = "primary",
+                                                             bsCollapsePanel(tags$strong("City Type",style="font-family:Raleway;"),style="info",
+                                                                             fluidRow(column(10,selectInput("Citytype",tags$strong("Preference",style="font-family:Raleway;"),choices = c('Suburb','City','Town','Rural'),selected = "None"))
                                                                              )
                                                              ),
-                                                             bsCollapsePanel(tags$strong("Crime Rate",style="font-family:Franklin Gothic Medium;"),style="info",
-                                                                             fluidRow(column(10,sliderInput("CrimeRate",label=tags$b('Crime Range',style="font-family:Franklin Gothic Medium;"),min=0,max=1300,value=c(100,500))))
+                                                             bsCollapsePanel(tags$strong("Crime Rate",style="font-family:Raleway;"),style="info",
+                                                                             fluidRow(column(10,sliderInput("CrimeRate",label=tags$b('Crime Range',style="font-family:Raleway;"),min=0,max=1300,value=c(100,500))))
                                                                              
                                                              ),
                                                              
-                                                             bsCollapsePanel(tags$strong("Happy Score",style="font-family:Franklin Gothic Medium;"),style="info",  
-                                                                             fluidRow(column(10,sliderInput("HappyScore",tags$strong("Happy Score",style="font-family:Franklin Gothic Medium;"),min=30,max=80,value=c(50,60))))
+                                                             bsCollapsePanel(tags$strong("Happy Score",style="font-family:Raleway;"),style="info",  
+                                                                             fluidRow(column(10,sliderInput("HappyScore",tags$strong("Happy Score",style="font-family:Raleway;"),min=30,max=80,value=c(50,60))))
+                                                             ),
+                                                             
+                                                             bsCollapsePanel(tags$strong("Tuition",style="font-family:Raleway;"),style="info",  
+                                                                             fluidRow(column(10,sliderInput("Tuition",tags$strong("Tuition",style="font-family:Raleway;"),min=min(as.numeric(currency(schooldata$Tuition.and.fees.y))),max=max(as.numeric(currency(schooldata$Tuition.and.fees.y))),value=c(50,60))))
+                                                             ),
+                                                             
+                                                             bsCollapsePanel(tags$strong("Admission Rate",style="font-family:Raleway;"),style="info",  
+                                                                             fluidRow(column(10,sliderInput("AdmissionRate",tags$strong("Admission Rate",style="font-family:Raleway;"),min=0.04,max=0.96,value=c(0.04,0.16))))
                                                              )
                                              )
+                                             
+                                             
+                                             
                                   ),                                                      
-                                  actionButton("search", tags$strong("Searching!"))
+                                  actionButton("search", tags$strong("Search"))
                         )#WellPanel ends here
                         
           )
@@ -113,14 +125,14 @@ ui <- navbarPage(theme=shinytheme("flatly"),
       fluidRow(column(width=4,offset=4,tags$h1("Side By side comparison",style="color:white;font-family:Montserrat;"))),
       fluidRow(column(width=5,wellPanel(style="opacity:0.8;font-family:Montserrat;",
                                         tags$b("School A"),
-                                        selectInput("sname_a",label=tags$b("Name",style="font-family:Franklin Gothic Medium"),choices=namelist),
+                                        selectInput("sname_a",label=tags$b("Name",style="font-family:Raleway"),choices=namelist),
                                         #imageOutput("logo_a",height = "400", width = "400"),
                                         dataTableOutput("comp_a")
                                         
                                         )),
               column(width=5,offset=2,wellPanel(style="opacity:0.8;font-family:Montserrat;",
                                        tags$b("School B"),
-                                       selectInput("sname_b",label=tags$b("Name",style="font-family:Franklin Gothic Medium"),choices=namelist),
+                                       selectInput("sname_b",label=tags$b("Name",style="font-family:Raleway"),choices=namelist),
                                        #imageOutput("logo_b",height = "400", width = "400"),
                                        dataTableOutput("comp_b")))
                          )),
@@ -135,37 +147,37 @@ ui <- navbarPage(theme=shinytheme("flatly"),
                        
                       wellPanel(top=50,style="opacity:0.8;font-family:Montserrat;",
                           
-                      h3("Select Filters",style="color:black;font-family:Franklin Gothic Medium;"),
+                      h3("Select Filters",style="color:black;font-family:Raleway;"),
              
-                      sliderInput("satscore",label=tags$b("SAT Score",style="color:black;font-family:Franklin Gothic Medium;"),min=400, max=1600, value=1000,step=10),
+                      sliderInput("satscore",label=tags$b("SAT Score",style="color:black;font-family:Raleway;"),min=400, max=1600, value=1000,step=10),
                       br(),
               
-                      selectInput("city",label=tags$b("Located in city/rural",style="color:black;font-family:Franklin Gothic Medium;"),choices=c("City","Not City")),
+                      selectInput("city",label=tags$b("Located in city/rural",style="color:black;font-family:Raleway;"),choices=c("City","Not City")),
                       br(),
               
-                      sliderInput("crime",label=tags$b("Crime Rate (Per 100000 people)",style="color:black;font-family:Franklin Gothic Medium;"),min=20,max=1300,value=600),
+                      sliderInput("crime",label=tags$b("Crime Rate (Per 100000 people)",style="color:black;font-family:Raleway;"),min=20,max=1300,value=600),
                       br(),
                  
-                      sliderInput("tuition", label=tags$b("Tuition (Per Year)",style="color:black;font-family:Franklin Gothic Medium;"),min=10000,max=60000,value=30000),
+                      sliderInput("tuition", label=tags$b("Tuition (Per Year)",style="color:black;font-family:Raleway;"),min=10000,max=60000,value=30000),
                       br(),
-                      sliderInput("adm",label=tags$b("Admission Rate",style="color:black;font-family:Franklin Gothic Medium;"),min=0,max=1,value=0.5,step=0.1)),
+                      sliderInput("adm",label=tags$b("Admission Rate",style="color:black;font-family:Raleway;"),min=0,max=1,value=0.5,step=0.1)),
       
                       wellPanel(top=50,style="opacity:0.8;font-family:Montserrat;",
                                
-                      h3("Instruction",style="color:black;font-family:Franklin Gothic Medium;"),
+                      h3("Instruction",style="color:black;font-family:Raleway;"),
                       
-                      h6("This is a system designed for finding your perfect school, choose your SAT score, your preference of the location of university, the maximum crime rate(per 100000 people) and tuition(per year) you can accept, and your preference of major. Then hit the search SCHOOL button to get matched school in the summary table.", style="color:grey;font-family:Franklin Gothic Medium;"))),
+                      h6("This is a system designed for finding your perfect school, choose your SAT score, your preference of the location of university, the maximum crime rate(per 100000 people) and tuition(per year) you can accept, and your preference of major. Then hit the search SCHOOL button to get matched school in the summary table.", style="color:grey;font-family:Raleway;"))),
               
                column(width=2, style="padding:0px;",
                      
                       wellPanel(top=50,style="opacity:0.8;font-family:Montserrat;",
              
-                      checkboxGroupInput("Major",label=tags$b("Major",style="color:black;font-family:Franklin Gothic Medium;"),choices=choicelist,selected=1),
+                      checkboxGroupInput("Major",label=tags$b("Major",style="color:black;font-family:Raleway;"),choices=choicelist,selected=1),
               
                       actionButton("getschool",label="Search SCHOOL")
               
     )),
-               column(width=5,titlePanel(tags$b("Summary Table",style="color:white;font-family:Franklin Gothic Medium;")),
+               column(width=5,titlePanel(tags$b("Summary Table",style="color:white;font-family:Raleway;")),
                       
                       wellPanel(dataTableOutput("uni"),style="opacity:0.8;font-family;Montserrat;")),
    
