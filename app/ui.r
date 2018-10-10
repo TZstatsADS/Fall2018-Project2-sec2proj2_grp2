@@ -125,17 +125,17 @@ ui <- navbarPage(theme=shinytheme("flatly"),
 #Comparison
     tabPanel(
       title="Comparison",icon=icon("balance-scale"),
-      fluidRow(column(width=4,offset=4,tags$h1("Side By side comparison",style="color:white;font-family:Montserrat;"))),
-      fluidRow(column(width=5,wellPanel(style="opacity:0.8;font-family:Montserrat;",
+      fluidRow(column(width=4,offset=4,tags$h1("Side By side comparison",style="color:white;"))),
+      fluidRow(column(width=5,wellPanel(style="opacity:0.8;",
                                         tags$b("School A"),
-                                        selectInput("sname_a",label=tags$b("Name",style="font-family:Raleway"),choices=namelist),
+                                        selectInput("sname_a",label=tags$b("Name"),choices=namelist),
                                         imageOutput("logo_a",height = "100", width = "100"),
                                         dataTableOutput("comp_a")
                                         
                                         )),
-              column(width=5,offset=2,wellPanel(style="opacity:0.8;font-family:Montserrat;",
+              column(width=5,offset=2,wellPanel(style="opacity:0.8;",
                                        tags$b("School B"),
-                                       selectInput("sname_b",label=tags$b("Name",style="font-family:Raleway"),choices=namelist),
+                                       selectInput("sname_b",label=tags$b("Name"),choices=namelist),
                                        imageOutput("logo_b",height = "100", width = "100"),
                                        dataTableOutput("comp_b")))
                          )),
@@ -148,41 +148,41 @@ ui <- navbarPage(theme=shinytheme("flatly"),
        fluidRow(
                 column(width=2,style="padding:0px;",
                        
-                      wellPanel(top=50,style="opacity:0.8;font-family:Montserrat;",
+                      wellPanel(top=50,style="opacity:0.8;",
                           
-                      h3("Select Filters",style="color:black;font-family:Raleway;"),
+                      h3("Select Filters",style="color:black;"),
              
-                      sliderInput("satscore",label=tags$b("SAT Score",style="color:black;font-family:Raleway;"),min=400, max=1600, value=1000,step=10),
+                      sliderInput("satscore",label=tags$b("SAT Score",style="color:black;"),min=400, max=1600, value=1000,step=10),
                       br(),
               
-                      selectInput("city",label=tags$b("Located in city/rural",style="color:black;font-family:Raleway;"),choices=c("City","Not City")),
+                      selectInput("city",label=tags$b("Located in city/rural",style="color:black;"),choices=c("City","Not City")),
                       br(),
               
-                      sliderInput("crime",label=tags$b("Crime Rate (Per 100000 people)",style="color:black;font-family:Raleway;"),min=20,max=1300,value=600),
+                      sliderInput("crime",label=tags$b("Crime Rate (Per 100000 people)",style="color:black;"),min=20,max=1300,value=600),
                       br(),
                  
-                      sliderInput("tuition", label=tags$b("Tuition (Per Year)",style="color:black;font-family:Raleway;"),min=10000,max=60000,value=30000),
+                      sliderInput("tuition", label=tags$b("Tuition (Per Year)",style="color:black;"),min=10000,max=60000,value=30000),
                       br(),
-                      sliderInput("adm",label=tags$b("Admission Rate",style="color:black;font-family:Raleway;"),min=0,max=1,value=0.5,step=0.1)),
+                      sliderInput("adm",label=tags$b("Admission Rate",style="color:black;"),min=0,max=1,value=0.5,step=0.1)),
       
-                      wellPanel(top=50,style="opacity:0.8;font-family:Montserrat;",
+                      wellPanel(top=50,style="opacity:0.8;",
                                
-                      h3("Instruction",style="color:black;font-family:Raleway;"),
+                      h3("Instruction",style="color:black;"),
                       
-                      h6("This is a system designed for finding your perfect school, choose your SAT score, your preference of the location of university, the maximum crime rate(per 100000 people) and tuition(per year) you can accept, and your preference of major. Then hit the search SCHOOL button to get matched school in the summary table.", style="color:grey;font-family:Raleway;"))),
+                      tags$p("This is a system designed for finding your perfect school, choose your SAT score, your preference of the location of university, the maximum crime rate(per 100000 people) and tuition(per year) you can accept, and your preference of major. Then hit the search SCHOOL button to get matched school in the summary table.", style="color:grey;font-family:Raleway;"))),
               
                column(width=2, style="padding:0px;",
                      
-                      wellPanel(top=50,style="opacity:0.8;font-family:Montserrat;",
+                      wellPanel(top=50,style="opacity:0.8;",
              
-                      checkboxGroupInput("Major",label=tags$b("Major",style="color:black;font-family:Raleway;"),choices=choicelist,selected=1),
+                      checkboxGroupInput("Major",label=tags$b("Major",style="color:black;"),choices=choicelist,selected=1),
               
                       actionButton("getschool",label="Search SCHOOL")
               
     )),
-               column(width=5,titlePanel(tags$b("Summary Table",style="color:white;font-family:Raleway;")),
+               column(width=5,titlePanel(tags$b("Summary Table",style="color:white;")),
                       
-                      wellPanel(dataTableOutput("uni"),style="opacity:0.8;font-family;Montserrat;")),
+                      wellPanel(dataTableOutput("uni"),style="opacity:0.8;")),
    
                column(width=3,div(style="height:50px"),
           

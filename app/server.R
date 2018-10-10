@@ -39,7 +39,7 @@ school1 <- schooldata %>% mutate(city_nocity=ifelse(schooldata$Citytype=='City',
   mutate(c_nc=ifelse(city_nocity==1,"City","Not City"))
 
 #Prepare font list for radar plot
-font1 <- list(family="Raleway",size=16,color="white")
+font1 <- list(size=16,color="white")
 
 server <- function(input, output,session){
 ##Map start here
