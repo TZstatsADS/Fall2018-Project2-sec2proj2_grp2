@@ -121,6 +121,7 @@ ui <- navbarPage(theme=shinytheme("flatly"),
                                                              bsCollapsePanel(tags$strong("Admission Rate",style="font-family:Raleway;"),style="info",  
                                                                              fluidRow(column(10,sliderInput("ADMrate",tags$strong("Admission Rate",style="font-family:Raleway;"),min=0.04,max=0.96,value=c(0.04,0.96))))
                                                              )
+                                                            
                                             
                                              ),
                                             
@@ -128,12 +129,15 @@ ui <- navbarPage(theme=shinytheme("flatly"),
                                                             fluidRow(column(10,selectInput("RankType",tags$strong("School Level",style="font-family:Raleway;"),choices = c('Ambitious', 'Mid Level', 'Safe'),selected = "None"))
                                                             )
                                             )
+                                            
+                                            
                                              
                                              
                                              
-                                  ),                                                      
+                                  ),
                                   actionButton("search", tags$strong("Search"))
                         )#WellPanel ends here
+                        
                         
           )
           
