@@ -51,6 +51,7 @@ for(i in 1:nrow(schooldata)){
 }
 
 #Data Preprocessing
+schooldata$RankType <- as.factor(schooldata$RankType)
 schooldata$ADMrate <- as.double(schooldata$ADMrate)
 schooldata$Tuition.and.fees.y <- as.numeric(currency(schooldata$Tuition.and.fees.y))
 schooldata$ADMrate <- round(ifelse(schooldata$ADMrate == "NULL", mean(as.numeric(schooldata$ADMrate),na.rm = TRUE),as.numeric(schooldata$ADMrate)),3)
@@ -58,7 +59,7 @@ schooldata$ADMrate <- round(ifelse(schooldata$ADMrate == "NULL", mean(as.numeric
 #Get Icons based on Ranks
 getColor <- function(k) {
   sapply(k$RankType, function(RankType) {
-    if(RankType == "Ambitious" ) {"red"} else if(RankType == "Safe") {"green"} else {"orange"} })}
+    if(RankType == "Ambitious" ) {"red"} else if(RankType == "Mid Level") {"orange"} else {"green"} })}
 
 #Convert City types into 1 and o (1 for city and 0 for not city)
 school1 <- schooldata %>% mutate(city_nocity=ifelse(schooldata$Citytype=='City',1,0))%>%
@@ -105,64 +106,61 @@ server <- function(input, output,session){
   })
   
   
-  v1<-reactive({
+  v2<-reactive({
     
     if (Major() == "") {
-      v1<-schooldata
+      v2<-v1()
     } 
     else {
-      v1 <- schooldata[(schooldata %>% select(Major()))>=1,]
+      v2 <- v1()[(v1() %>% select(Major()))>=1,]
     }
     
   })
   
   
-  v2<- reactive({
-    v2 <- filter(v1(),
+  v3<- reactive({
+    v3 <- filter(v2(),
                  as.numeric(SAT) >= SAT()[1] &
                    as.numeric(SAT) <= SAT()[2])
   })  
   
   
-  v3<- reactive({
+  v4<- reactive({
     if (Citytype() == "None") {
-      v3<- v2()} 
+      v4<- v3()} 
     else {
-      v3<- filter(v2(), v2()$Citytype == Citytype()) 
+      v4<- filter(v3(), v3()$Citytype == Citytype()) 
     }}) 
   
   
-  v4<- reactive({
-    v4 <- filter(v3(),
+  v5<- reactive({
+    v5 <- filter(v4(),
                  as.numeric(CrimeRate) >= CrimeRate()[1] &
                    as.numeric(CrimeRate) <= CrimeRate()[2]) 
   }) 
   
-  v5<- reactive({
-    v5 <- filter(v4(),
+  v6<- reactive({
+    v6 <- filter(v5(),
                  as.numeric(HappyScore) >= HappyScore()[1] &
                    as.numeric(HappyScore) <= HappyScore()[2]) 
   })
   
-  v6<- reactive({
-    v6 <- filter(v5(),
+  v7<- reactive({
+    v7 <- filter(v6(),
                  ADMrate >= ADMrate()[1] &
                    ADMrate <= ADMrate()[2])  
   })
   
-  v7<- reactive({
-    v7 <- filter(v6(),
+  v8<- reactive({
+    v8 <- filter(v7(),
                  as.numeric(Tuition.and.fees.y) >= Tuition.and.fees.y()[1] &
                    as.numeric(Tuition.and.fees.y) <= Tuition.and.fees.y()[2])
   
   })
   
-  v8<- reactive({
-    if (RankType() == "None") {
-      v8<- v7()} 
-    else {
-      v8<- filter(v7(), v7()$RankType == RankType()) 
-    }})
+  v1<- reactive({
+      v1<- filter(schooldata, schooldata$RankType == RankType()) 
+    })
 
   
   
@@ -176,7 +174,7 @@ server <- function(input, output,session){
     icon.ion <- awesomeIcons(icon = "ios-close",
                              iconColor = "black",
                              library = "ion",
-                             markerColor = getColor(schooldata))
+                             markerColor = getColor(v8()))
     
     #
     sub_data <- v8()
