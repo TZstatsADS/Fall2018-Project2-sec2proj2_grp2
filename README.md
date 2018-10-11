@@ -18,7 +18,7 @@ Term: Fall 2018
 
 + **Project summary**:Our project takes all available data on colleges and universities across US and creates a useful shiny app that allows users to explore, compare and recommend the same. Our users can be anybody from prospective students, concerned parents and anybody else who wishes to see the landscape of college education in the United States.
 
-+ **Contribution statement**: (In order of alphabetical order) Yang Cai worked on the Recommendations, Comparison and Combination of the UI. Yang Chen worked on the Map and Comparison. Atishay Sehgal worked on the Map, Comparison and Presentation. Chenzhong Zhong worked on the Comparison. All team members approve our work presented in this GitHub repository including this contributions statement. 
++ **Contribution statement**: (In order of alphabetical order) Yang Cai worked on the Recommendations, Comparison and Combination of the UI. Yang Chen worked on the Map and Comparison. Atishay Sehgal worked on the Map, Comparison and Presentation. Chenzhong Zhong worked on the Comparison, Qingyang Zhong worked on the Recommendation. All team members approve our work presented in this GitHub repository including this contributions statement. 
 
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
 
