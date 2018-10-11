@@ -126,7 +126,7 @@ ui <- navbarPage(theme=shinytheme("flatly"),
                                             
                                             ),
                                               
-                                  bsCollapsePanel(tags$strong("School Level",style="font-family:Raleway;"),style="info",
+                                  bsCollapsePanel(tags$strong("School Level",style="font-family:Raleway;"),style="primary",
                                                   fluidRow(column(10,radioButtons("RankType",tags$strong("School Level",style="font-family:Raleway;"),choices = c('Ambitious', 'Mid Level', 'Safe'),selected = "Ambitious"))
                                                   )
                                             
