@@ -11,7 +11,7 @@ In this second project of GR5243 Applied Data Science, we develop a version 2.0 
 Term: Fall 2018
 
 + Team 2
-+ **NY Schools Hunter**: + Team members:
++ **Schools Hunter**: + Team members:
 	+  Cai, Yang yc3404@columbia.edu
 	+  Chen, Yang yc3335@columbia.edu
 	+  Sehgal, Atishay as5453@columbia.edu -Presenter
