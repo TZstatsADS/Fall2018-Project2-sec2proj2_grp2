@@ -24,6 +24,7 @@ library(shinythemes)
 library(formattable)
 
 schooldata <- read.csv(file="final3data_with_tuition.csv",stringsAsFactors = FALSE)
+
 #Support data frames
 major = c("Agriculture","Natural Resources And Conservation", "Architecture And Related Services",
           "Computer And Information Sciences And Support Services"," Education","Engineering"," Biological And Biomedical Sciences",
@@ -33,6 +34,18 @@ major.frame = data.frame(major = major, index = major.index)
 choicelist<-as.list(unique(as.data.frame(major.frame)[,2]))
 namelist <- as.list(schooldata$Name)
 
+schooldata$RankType <- rep(NA)
+for(i in 1:nrow(schooldata)){
+  if(schooldata$Rank[i] <= 5)
+  {
+    schooldata$RankType[i] = "Ambitious"
+  } else if(schooldata$Rank[i] <=30 & schooldata$Rank[i] > 5)
+  {
+    schooldata$RankType[i] = "Mid Level"
+  } else schooldata$RankType[i] = "Safe"
+}
+
+schooldata$ADMrate <- as.double(schooldata$ADMrate)
 schooldata$Tuition.and.fees.y <- as.numeric(currency(schooldata$Tuition.and.fees.y))
 schooldata$ADMrate <- round(ifelse(schooldata$ADMrate == "NULL", mean(as.numeric(schooldata$ADMrate),na.rm = TRUE),as.numeric(schooldata$ADMrate)),3)
 
@@ -106,13 +119,13 @@ ui <- navbarPage(theme=shinytheme("flatly"),
                                                              ),
                                                              
                                                              bsCollapsePanel(tags$strong("Admission Rate",style="font-family:Raleway;"),style="info",  
-                                                                             fluidRow(column(10,sliderInput("ADMRate",tags$strong("Admission Rate",style="font-family:Raleway;"),min=0.04,max=0.96,value=c(0.04,0.96))))
+                                                                             fluidRow(column(10,sliderInput("ADMrate",tags$strong("Admission Rate",style="font-family:Raleway;"),min=0.04,max=0.96,value=c(0.04,0.96))))
                                                              )
                                             
                                              ),
                                             
-                                            bsCollapsePanel(tags$strong("Rank",style="font-family:Raleway;"),style="info",
-                                                            fluidRow(column(10,checkboxGroupInput("Rank",tags$strong("Preference",style="font-family:Raleway;"),choices = c('Top 5','Top 10','Top 20','Top 50'),selected = "None"))
+                                            bsCollapsePanel(tags$strong("School Level",style="font-family:Raleway;"),style="info",
+                                                            fluidRow(column(10,selectInput("RankType",tags$strong("School Level",style="font-family:Raleway;"),choices = c('Ambitious', 'Mid Level', 'Safe'),selected = "None"))
                                                             )
                                             )
                                              

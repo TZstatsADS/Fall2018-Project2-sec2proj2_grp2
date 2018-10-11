@@ -33,8 +33,25 @@ major = c("Agriculture","Natural Resources And Conservation", "Architecture And 
 major.index =colnames(schooldata)[16:27]
 major.frame = data.frame(major = major, index = major.index)
 
+for(i in 1:nrow(schooldata)){
+  if(schooldata$Rank[i] <= 5)
+  {
+    schooldata$RankType[i] = "Ambitious"
+  } else if(schooldata$Rank[i] <=30 & schooldata$Rank[i] > 5)
+  {
+    schooldata$RankType[i] = "Mid Level"
+  } else schooldata$RankType[i] = "Safe"
+}
+
+#Data Preprocessing
+schooldata$ADMrate <- as.double(schooldata$ADMrate)
 schooldata$Tuition.and.fees.y <- as.numeric(currency(schooldata$Tuition.and.fees.y))
 schooldata$ADMrate <- round(ifelse(schooldata$ADMrate == "NULL", mean(as.numeric(schooldata$ADMrate),na.rm = TRUE),as.numeric(schooldata$ADMrate)),3)
+
+#Get Icons based on Ranks
+getColor <- function(k) {
+  sapply(k$RankType, function(RankType) {
+    if(RankType == "Ambitious" ) {"red"} else if(RankType == "Safe") {"green"} else {"orange"} })}
 
 #Convert City types into 1 and o (1 for city and 0 for not city)
 school1 <- schooldata %>% mutate(city_nocity=ifelse(schooldata$Citytype=='City',1,0))%>%
@@ -65,8 +82,8 @@ server <- function(input, output,session){
     HappyScore<-input$HappyScore
   })
   
-  ADMRate<-reactive({
-    ADMRate<-input$ADMRate
+  ADMrate<-reactive({
+    ADMrate<-input$ADMrate
   
   })
   
@@ -74,6 +91,12 @@ server <- function(input, output,session){
     Tuition.and.fees.y<-input$Tuition.and.fees.y
     
   })
+  
+  RankType<-reactive({
+    RankType <- input$RankType
+    
+  })
+  
   
   v1<-reactive({
     
@@ -98,7 +121,7 @@ server <- function(input, output,session){
     if (Citytype() == "None") {
       v3<- v2()} 
     else {
-      v3<- filter(v2(), v2()$Citytype==Citytype()) 
+      v3<- filter(v2(), v2()$Citytype == Citytype()) 
     }}) 
   
   
@@ -116,19 +139,24 @@ server <- function(input, output,session){
   
   v6<- reactive({
     v6 <- filter(v5(),
-                 as.numeric(ADMRate) >= ADMRate()[1] &
-                   as.numeric(ADMRate) <= ADMRate()[2])  
+                 ADMrate >= ADMrate()[1] &
+                   ADMrate <= ADMrate()[2])  
   })
   
   v7<- reactive({
     v7 <- filter(v6(),
-                 Tuition.and.fees.y >= Tuition.and.fees.y()[1] &
-                   Tuition.and.fees.y <= Tuition.and.fees.y()[2])
+                 as.numeric(Tuition.and.fees.y) >= Tuition.and.fees.y()[1] &
+                   as.numeric(Tuition.and.fees.y) <= Tuition.and.fees.y()[2])
   
   })
   
-  
-  
+  v8<- reactive({
+    if (RankType() == "None") {
+      v8<- v7()} 
+    else {
+      v8<- filter(v7(), v7()$RankType == RankType()) 
+    }})
+
   
   
   
@@ -138,11 +166,13 @@ server <- function(input, output,session){
     
     
     #load icon
-    icon.ion <- makeAwesomeIcon(icon = "users", markerColor = "green",
-                                library = "ion")
+    icon.ion <- awesomeIcons(icon = "ios-close",
+                             iconColor = "black",
+                             library = "ion",
+                             markerColor = getColor(schooldata))
     
     #
-    sub_data <- v7()
+    sub_data <- v8()
     
     
     
@@ -163,7 +193,6 @@ server <- function(input, output,session){
     
     else{
       
-      #data = head(arrange(airdata(),desc(frequency)), input$NumberofDestination)
       
       #load map
       map = leaflet(sub_data) %>% setView(-98.35  , 39.48, zoom = 4) %>% 
@@ -173,7 +202,9 @@ server <- function(input, output,session){
         #                      '&copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
         #                   ))
         addProviderTiles(providers$Esri.WorldStreetMap) %>%
-        addAwesomeMarkers(lng = v7()$Longitude, lat = v7()$Latitude, icon=icon.ion, popup = paste(v7()$Name,"         ;Rank:",v7()$Rank,sep="\n"),label=v7()$URL)
+        addAwesomeMarkers(lng = v8()$Longitude, lat = v8()$Latitude, icon=icon.ion, 
+                          popup = paste(v8()$Name,"         ;Rank:",v8()$Rank,sep="\n"),label=v8()$URL,
+                          options = markerOptions(riseOnHover = T))
       
       
       
