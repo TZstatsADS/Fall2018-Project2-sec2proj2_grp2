@@ -45,7 +45,6 @@ for(i in 1:nrow(schooldata)){
   } else schooldata$RankType[i] = "Safe"
 }
 
-schooldata$RankType <- as.factor(schooldata$RankType)
 schooldata$ADMrate <- as.double(schooldata$ADMrate)
 schooldata$Tuition.and.fees.y <- as.numeric(currency(schooldata$Tuition.and.fees.y))
 schooldata$ADMrate <- round(ifelse(schooldata$ADMrate == "NULL", mean(as.numeric(schooldata$ADMrate),na.rm = TRUE),as.numeric(schooldata$ADMrate)),3)
@@ -93,24 +92,24 @@ ui <- navbarPage(theme=shinytheme("flatly"),
                                                              tags$style(type="text/css",
                                                                         ".shiny-output-error { visibility: hidden; }",
                                                                         ".shiny-output-error:before { visibility: hidden; }"),
-                                                             fluidRow(column(12,checkboxGroupInput("filter",tags$b("Major",style="font-family:Raleway;"),choices=choicelist,selected=c(1:12)))),
-                                                             fluidRow(column(10,sliderInput('SAT',label=tags$b('SAT Range',style="font-family:Raleway;"),min=800,max=1600,value=c(800,1600))))),
+                                                             fluidRow(column(12,checkboxGroupInput("filter",tags$b("Major",style="font-family:Raleway;"),choices=choicelist,selected=1))),
+                                                             fluidRow(column(10,sliderInput('SAT',label=tags$b('SAT Range',style="font-family:Raleway;"),min=800,max=1600,value=c(1200,1600))))),
                                              
                                              
                                              
                                              
                                              bsCollapsePanel(tags$strong("Location Preference",style="font-family:Raleway;"),style = "primary",
                                                              bsCollapsePanel(tags$strong("City Type",style="font-family:Raleway;"),style="info",
-                                                                             fluidRow(column(10,selectInput("Citytype",tags$strong("Preference",style="font-family:Raleway;"),choices = c('Suburb','City','Town','Rural'),selected = "City"))
+                                                                             fluidRow(column(10,selectInput("Citytype",tags$strong("Preference",style="font-family:Raleway;"),choices = c('Suburb','City','Town','Rural'),selected = "None"))
                                                                              )
                                                              ),
                                                              bsCollapsePanel(tags$strong("Crime Rate",style="font-family:Raleway;"),style="info",
-                                                                             fluidRow(column(10,sliderInput("CrimeRate",label=tags$b('Crime Range',style="font-family:Raleway;"),min=0,max=1300,value=c(0,1300))))
+                                                                             fluidRow(column(10,sliderInput("CrimeRate",label=tags$b('Crime Range',style="font-family:Raleway;"),min=0,max=1300,value=c(100,500))))
                                                                              
                                                              ),
                                                              
                                                              bsCollapsePanel(tags$strong("Happy Score",style="font-family:Raleway;"),style="info",  
-                                                                             fluidRow(column(10,sliderInput("HappyScore",tags$strong("Happy Score",style="font-family:Raleway;"),min=30,max=80,value=c(30,80))))
+                                                                             fluidRow(column(10,sliderInput("HappyScore",tags$strong("Happy Score",style="font-family:Raleway;"),min=30,max=80,value=c(50,60))))
                                                              )),
                                                              
                                             bsCollapsePanel(tags$strong("College Requirements",style="font-family:Raleway;"),style = "primary",
@@ -127,7 +126,7 @@ ui <- navbarPage(theme=shinytheme("flatly"),
                                              ),
                                             
                                             bsCollapsePanel(tags$strong("School Level",style="font-family:Raleway;"),style="info",
-                                                            fluidRow(column(10,checkboxGroupInput("RankType",tags$strong("School Level",style="font-family:Raleway;"),choices = c('Ambitious', 'Mid Level', 'Safe'),selected = c(1:4)))
+                                                            fluidRow(column(10,selectInput("RankType",tags$strong("School Level",style="font-family:Raleway;"),choices = c('Ambitious', 'Mid Level', 'Safe'),selected = "None"))
                                                             )
                                             )
                                             
@@ -164,7 +163,28 @@ ui <- navbarPage(theme=shinytheme("flatly"),
                                        selectInput("sname_b",label=tags$b("Name"),choices=namelist),
                                        imageOutput("logo_b",height = "100", width = "100"),
                                        dataTableOutput("comp_b")))
-                         )),
+                         ),
+      fluidRow(column(width=5,wellPanel(style="opacity:0.8;",
+                                        tags$b("1st & 3rd quartile of earnings "),
+                                        tableOutput("earning1")
+                                        
+               )),
+               column(width=5,offset=2,wellPanel(style="opacity:0.8;",
+                                        tags$b("1st & 3rd quartile of earnings "),
+                                        tableOutput("earning2")))
+               ),
+      
+      fluidRow(column(width=5,wellPanel(style="opacity:0.8",
+                                        plotlyOutput("female1",height="200"),
+                                        plotlyOutput("demographics1")
+                                        
+                )),
+               column(width=5,offset=2,wellPanel(height="100",style="opacity:0.8;",
+                                        plotlyOutput("female2",height="200"),
+                                        plotlyOutput("demographics2")
+       ))
+      )
+      ),
      
 
 #Recommendation

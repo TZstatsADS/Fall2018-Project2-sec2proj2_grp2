@@ -21,7 +21,14 @@ library(shinyjs)
 library(formattable)
 
 #Read in Files
-
+college=read.csv("college_top.csv")
+college1=read.csv("college_top1.csv")
+college1$PCT25_EARN_WNE_P6=college1$PCT25_EARN_WNE_P6%>%as.character()
+college1$PCT75_EARN_WNE_P6=college1$PCT75_EARN_WNE_P6%>%as.character()
+college1$PCT25_EARN_WNE_P8=college1$PCT25_EARN_WNE_P8%>%as.character()
+college1$PCT75_EARN_WNE_P8=college1$PCT75_EARN_WNE_P8%>%as.character()
+college1$PCT25_EARN_WNE_P10=college1$PCT25_EARN_WNE_P10%>%as.character()
+college1$PCT75_EARN_WNE_P10=college1$PCT75_EARN_WNE_P10%>%as.character()
 
 
 schooldata <- read.csv(file="final3data_with_tuition.csv",stringsAsFactors = FALSE)
@@ -44,7 +51,6 @@ for(i in 1:nrow(schooldata)){
 }
 
 #Data Preprocessing
-schooldata$RankType <- as.factor(schooldata$RankType)
 schooldata$ADMrate <- as.double(schooldata$ADMrate)
 schooldata$Tuition.and.fees.y <- as.numeric(currency(schooldata$Tuition.and.fees.y))
 schooldata$ADMrate <- round(ifelse(schooldata$ADMrate == "NULL", mean(as.numeric(schooldata$ADMrate),na.rm = TRUE),as.numeric(schooldata$ADMrate)),3)
@@ -52,7 +58,7 @@ schooldata$ADMrate <- round(ifelse(schooldata$ADMrate == "NULL", mean(as.numeric
 #Get Icons based on Ranks
 getColor <- function(k) {
   sapply(k$RankType, function(RankType) {
-    if(RankType == "Ambitious" ) {"red"} else if(RankType == "Mid Level") {"orange"} else {"green"} })}
+    if(RankType == "Ambitious" ) {"red"} else if(RankType == "Safe") {"green"} else {"orange"} })}
 
 #Convert City types into 1 and o (1 for city and 0 for not city)
 school1 <- schooldata %>% mutate(city_nocity=ifelse(schooldata$Citytype=='City',1,0))%>%
@@ -99,61 +105,64 @@ server <- function(input, output,session){
   })
   
   
-  v2<-reactive({
+  v1<-reactive({
     
     if (Major() == "") {
-      v2<-v1()
+      v1<-schooldata
     } 
     else {
-      v2 <- v1()[(v1() %>% select(Major()))>=1,]
+      v1 <- schooldata[(schooldata %>% select(Major()))>=1,]
     }
     
   })
   
   
-  v3<- reactive({
-    v3 <- filter(v2(),
+  v2<- reactive({
+    v2 <- filter(v1(),
                  as.numeric(SAT) >= SAT()[1] &
                    as.numeric(SAT) <= SAT()[2])
   })  
   
   
-  v4<- reactive({
+  v3<- reactive({
     if (Citytype() == "None") {
-      v4<- v3()} 
+      v3<- v2()} 
     else {
-      v4<- filter(v3(), v3()$Citytype == Citytype()) 
+      v3<- filter(v2(), v2()$Citytype == Citytype()) 
     }}) 
   
   
-  v5<- reactive({
-    v5 <- filter(v4(),
+  v4<- reactive({
+    v4 <- filter(v3(),
                  as.numeric(CrimeRate) >= CrimeRate()[1] &
                    as.numeric(CrimeRate) <= CrimeRate()[2]) 
   }) 
   
-  v6<- reactive({
-    v6 <- filter(v5(),
+  v5<- reactive({
+    v5 <- filter(v4(),
                  as.numeric(HappyScore) >= HappyScore()[1] &
                    as.numeric(HappyScore) <= HappyScore()[2]) 
   })
   
-  v7<- reactive({
-    v7 <- filter(v6(),
+  v6<- reactive({
+    v6 <- filter(v5(),
                  ADMrate >= ADMrate()[1] &
                    ADMrate <= ADMrate()[2])  
   })
   
-  v8<- reactive({
-    v8 <- filter(v7(),
+  v7<- reactive({
+    v7 <- filter(v6(),
                  as.numeric(Tuition.and.fees.y) >= Tuition.and.fees.y()[1] &
                    as.numeric(Tuition.and.fees.y) <= Tuition.and.fees.y()[2])
   
   })
   
-  v1<- reactive({
-      v1<- filter(schooldata, schooldata$RankType == RankType()) 
-    })
+  v8<- reactive({
+    if (RankType() == "None") {
+      v8<- v7()} 
+    else {
+      v8<- filter(v7(), v7()$RankType == RankType()) 
+    }})
 
   
   
@@ -167,7 +176,7 @@ server <- function(input, output,session){
     icon.ion <- awesomeIcons(icon = "ios-close",
                              iconColor = "black",
                              library = "ion",
-                             markerColor = getColor(v8()))
+                             markerColor = getColor(schooldata))
     
     #
     sub_data <- v8()
@@ -312,6 +321,300 @@ server <- function(input, output,session){
     )  %>%
       formatCurrency(("Tuition"), digits = 0)
   }, server = T)
+  ####### Earning percentile ####### 
+  
+  MY_earning_data1=reactive({
+    
+    # Get the needed reactive objects:
+    my_schools=c(input$sname_a,input$sname_b)
+    
+    get.earning.data <- function(data,school){
+      
+      
+      relevant.data <- data[data$INSTNM==school,]
+      
+      my.vector <- c(relevant.data$PCT25_EARN_WNE_P6,relevant.data$PCT75_EARN_WNE_P6,
+                     relevant.data$PCT25_EARN_WNE_P8,relevant.data$PCT75_EARN_WNE_P8,
+                     relevant.data$PCT25_EARN_WNE_P10,relevant.data$PCT75_EARN_WNE_P10
+      )
+      my.vector=my.vector%>% as.numeric()
+      return(my.vector)
+    }
+    output <- get.earning.data(college1,my_schools[1])
+    return(output)
+    
+  })
+  
+  MY_earning_data2=reactive({
+    
+    # Get the needed reactive objects:
+    my_schools=c(input$sname_a,input$sname_b)
+    
+    get.earning.data <- function(data,school){
+      
+      
+      relevant.data <- data[data$INSTNM==school,]
+      
+      my.vector <- c(relevant.data$PCT25_EARN_WNE_P6,relevant.data$PCT75_EARN_WNE_P6,
+                     relevant.data$PCT25_EARN_WNE_P8,relevant.data$PCT75_EARN_WNE_P8,
+                     relevant.data$PCT25_EARN_WNE_P10,relevant.data$PCT75_EARN_WNE_P10
+      )
+      my.vector=my.vector %>% as.numeric()
+      return(my.vector)
+    }
+    output <- get.earning.data(college1,my_schools[2])
+    return(output)
+    
+  })
+  
+  output$earning1 <- renderTable(
+    
+    
+    cbind(After_Entry = c("6 yrs" ,"8 yrs", "10 yrs"),
+          Income = c(paste("$",MY_earning_data1()[1],"-","$",MY_earning_data1()[2]),
+                     paste("$",MY_earning_data1()[3],"-","$",MY_earning_data1()[4]),
+                     paste("$",MY_earning_data1()[5],"-","$",MY_earning_data1()[6])))
+  )
+  output$earning2 <- renderTable(
+    
+    
+    cbind(After_Entry = c("6 yrs" ,"8 yrs", "10 yrs"),
+          Income = c(paste("$",MY_earning_data2()[1],"-","$",MY_earning_data2()[2]),
+                     paste("$",MY_earning_data2()[3],"-","$",MY_earning_data2()[4]),
+                     paste("$",MY_earning_data2()[5],"-","$",MY_earning_data2()[6])))
+  )
+  ####### end of earning percnetile ###### 
+  ###### gender pie chart#######
+  
+  ####get data used to draw pie chart of female students
+  MY_female_data1=reactive({
+    
+    # Get the needed reactive objects:
+    my_schools=c(input$sname_a,input$sname_b)
+    
+    get.mf.data <- function(data,school){
+      index <- which(data$INSTNM == school)
+      female <- data$FEMALE[index]%>%as.character()%>%as.numeric()
+      
+      if (is.na(female)) {female <- "PrivacySuppressed"}
+      if(female=="PrivacySuppressed"){
+        out.val<-data.frame(1,"Privacy Suppressed",color='rgb(128,133,133)')
+      } else{
+        female<-as.numeric(female) 
+        out.val<-data.frame(c(female,1-female),c("Female","Male"), color=c(1,2))
+      }
+      
+      return(out.val)
+    }
+    output <- get.mf.data(college, my_schools[1])
+    #colnames(output) <- c("1","mf")
+    return(output)
+    
+  })
+  output$female1 <- renderPlotly(
+    plot_ly(MY_female_data1(), labels = ~MY_female_data1()[,2], values = ~MY_female_data1()[,1], type = 'pie',
+            marker = list(colors = MY_female_data1()[,3], 
+                          line = list(color = '#FFFFFF', width = 1)), 
+            width = 400, height = 400, textposition = 'inside+outside',
+            textinfo = 'label',
+            insidetextfont = list(color = '#FFFFFF'), showlegend=F
+    ) 
+    %>%
+      layout(title = paste("Gender & Ethnicity Diversity of <br>",name1()),
+             xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+             yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+             legend=list(orientation='h'),
+             margin = list(l = 50,r = 50,b = 100,t = 100,pad = 4))%>%
+      layout(paper_bgcolor='#00000000')
+  )
+  
+  
+  MY_female_data2=reactive({
+    # Get the needed reactive objects:
+    my_schools=c(input$sname_a,input$sname_b)
+    
+    get.mf.data <- function(data,school){
+      index <- which(data$INSTNM == school)
+      female <- data$FEMALE[index]%>%as.character()%>%as.numeric()
+      
+      if (is.na(female)) {female <- "PrivacySuppressed"}
+      
+      #relevent_data <- data[data$INSTNM == school,]
+      #female <- relevent_data$FEMALE
+      if(female=="PrivacySuppressed"){
+        out.val<-data.frame(1,"Privacy Suppressed",color='rgb(128,133,133)')
+      } else{
+        female<-as.numeric(female) 
+        out.val<-data.frame(c(female,1-female),c("Female","Male"),color=c(1,2))
+      }
+      return(out.val)
+      
+    }
+    output <- get.mf.data(college, my_schools[2])
+    #colnames(output) <- c("2","mf")
+    return(output)
+    
+  })
+  output$female2 <- renderPlotly(
+    plot_ly(MY_female_data2(), labels = ~MY_female_data2()[,2], values = ~MY_female_data2()[,1], type = 'pie',
+            marker = list(colors = MY_female_data2()[,3], 
+                          line = list(color = '#FFFFFF', width = 1)), 
+            width = 400, height = 400, textposition = 'inside+outside',
+            textinfo = 'label',
+            insidetextfont = list(color = '#FFFFFF'), showlegend=F
+    ) 
+    %>%
+      layout(title = paste("Gender & Ethnicity Diversity of <br>",name2()),
+             xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+             yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+             legend=list(orientation='h'),
+             margin = list(l = 50,r = 50,b = 100,t = 100,pad = 4))%>%
+      layout(paper_bgcolor='#00000000')
+  )
+  
+  #####end of gender pie chart#####
+  
+  ######## ethnicity diversity####
+  ##get data used to draw pie chart of ethnicity
+  
+  MY_ethnicity_data1=reactive({
+    
+    # Get the needed reactive objects:
+    my_schools=c(input$sname_a,input$sname_b)
+    
+    get.pie.chart <- function(data, school){
+      my.text <- "UGDS_2*[A-Z]+"
+      indices <- grepl(my.text,colnames(data))
+      my.data <- data[data$INSTNM==school,indices]
+      my.data <- my.data[,1:9]
+      my.data <- as.vector(as.matrix(my.data[1,]))
+      
+      demo.names <- c("White","Black","Hispanic","Asian","American Indian/Alaska Native",
+                      "Native Hawaiian/Pacific Islander","2 or More Races","Non-resident Aliens",
+                      "Unknown")
+      #colnames(my.data) <- demo.names
+      my.df <- data.frame(my.data,demo.names,colors=c(1,2,3,4,5,6,7,8,9)
+      )
+      
+      to.remove <- NULL
+      for (i in 1:length(my.data)){
+        if (my.data[i] == 0 | is.na(my.data[i])){
+          to.remove <- cbind(to.remove,i)
+        }
+      }
+      to.remove <- as.vector(to.remove[1,])
+      
+      if (length(my.data) == length(to.remove)){
+        output.df <- data.frame(1,"Privacy Suppressed",color='rgb(128,133,133)')
+        #colnames(my.df) <- "NA"
+        return(output.df)
+      } else if (!is.null(to.remove)){
+        #my.df <- my.data[-to.remove]
+        #colnames(my.df) <- demo.names[-to.remove]
+        output.df <- my.df[-to.remove,]
+        return(output.df)
+      } else {return(my.df)}
+      
+    }
+    
+    #output <- as.matrix(get.pie.chart(college, my_schools[2]))
+    #rownames(output) <- 2
+    output <- get.pie.chart(college,my_schools[1])
+    return(output)
+    
+  })
+  #colors <- c('rgb(128,133,133)','rgb(211,94,96)', 'rgb(144,103,167)', 'rgb(171,104,87)', 'rgb(114,147,203)')
+  
+  output$demographics1 <-
+    renderPlotly(
+      plot_ly(MY_ethnicity_data1(), labels = MY_ethnicity_data1()[,2],
+              values = MY_ethnicity_data1()[,1], 
+              type = 'pie',marker = list(colors = MY_ethnicity_data1()[,3],
+                                         line = list(color = '#FFFFFF', width = 1)),
+              width = 400, height = 400, textposition = 'inside+outside',
+              textinfo = 'label',
+              insidetextfont = list(color = '#FFFFFF'), showlegend=F )
+      %>%
+        layout(title = NULL,
+               xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+               yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+               legend=list(orientation='h'), 
+               margin = list(l = 100,r = 100,b = 20,t = 100,pad = 5))%>%
+        layout(paper_bgcolor='#00000000')
+      
+      
+    )
+  
+  MY_ethnicity_data2=reactive({
+    
+    # Get the needed reactive objects:
+    my_schools=c(input$sname_a,input$sname_b)
+    
+    get.pie.chart <- function(data, school){
+      my.text <- "UGDS_2*[A-Z]+"
+      indices <- grepl(my.text,colnames(data))
+      my.data <- data[data$INSTNM==school,indices]
+      my.data <- my.data[,1:9]
+      my.data <- as.vector(as.matrix(my.data[1,]))
+      
+      demo.names <- c("White","Black","Hispanic","Asian","American Indian/Alaska Native",
+                      "Native Hawaiian/Pacific Islander","2 or More Races","Non-resident Aliens",
+                      "Unknown")
+      #colnames(my.data) <- demo.names
+      my.df <- data.frame(my.data,demo.names,colors=c(1,2,3,4,5,6,7,8,9)
+      )
+      
+      to.remove <- NULL
+      for (i in 1:length(my.data)){
+        if (my.data[i] == 0 | is.na(my.data[i])){
+          to.remove <- cbind(to.remove,i)
+        }
+      }
+      to.remove <- as.vector(to.remove[1,])
+      
+      if (length(my.data) == length(to.remove)){
+        output.df <- data.frame(1,"Privacy Suppressed",color='rgb(128,133,133)')
+        #colnames(my.df) <- "NA"
+        return(output.df)
+      } else if (!is.null(to.remove)){
+        #my.df <- my.data[-to.remove]
+        #colnames(my.df) <- demo.names[-to.remove]
+        output.df <- my.df[-to.remove,]
+        return(output.df)
+      } else {return(my.df)}
+      
+    }
+    
+    #output <- as.matrix(get.pie.chart(college, my_schools[2]))
+    #rownames(output) <- 2
+    output <- get.pie.chart(college,my_schools[2])
+    return(output)
+    
+  })
+  
+  output$demographics2 <-
+    renderPlotly(
+      plot_ly(MY_ethnicity_data2(), labels =MY_ethnicity_data2()[,2],
+              values = MY_ethnicity_data2()[,1], 
+              type = 'pie',marker = list(colors = MY_ethnicity_data2()[,3],
+                                         line = list(color = '#FFFFFF', width = 1)),
+              width = 400, height = 400, textposition = 'inside+outside',
+              textinfo = 'label',
+              insidetextfont = list(color = '#FFFFFF'), showlegend=F )
+      %>%
+        layout(title = NULL,
+               xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+               yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+               legend=list(orientation='h'),
+               margin = list(l = 100,r = 100,b = 20,t = 100,pad = 5))%>%
+        layout(paper_bgcolor='#00000000')
+      
+    )
+  
+  
+  
+  ###### end of ethnicity####
+  
   
     
 #Recommendation System Plot
