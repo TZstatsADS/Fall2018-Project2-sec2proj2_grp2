@@ -1,4 +1,4 @@
-# Project 2: Shiny App Development Version 2.0: NY Schools Hunter
+# Project 2: Shiny App Development Version 2.0: Schools Hunter
 
 HTTPS://apdatascience.shinyapps.io/school
 
