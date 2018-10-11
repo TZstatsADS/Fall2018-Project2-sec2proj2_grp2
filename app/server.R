@@ -41,10 +41,10 @@ major.index =colnames(schooldata)[16:27]
 major.frame = data.frame(major = major, index = major.index)
 
 for(i in 1:nrow(schooldata)){
-  if(schooldata$Rank[i] <= 5)
+  if(schooldata$Rank[i] <= 10)
   {
     schooldata$RankType[i] = "Ambitious"
-  } else if(schooldata$Rank[i] <=30 & schooldata$Rank[i] > 5)
+  } else if(schooldata$Rank[i] <=30 & schooldata$Rank[i] > 10)
   {
     schooldata$RankType[i] = "Mid Level"
   } else schooldata$RankType[i] = "Safe"

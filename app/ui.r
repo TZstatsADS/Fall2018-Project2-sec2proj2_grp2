@@ -36,10 +36,10 @@ namelist <- as.list(schooldata$Name)
 
 schooldata$RankType <- rep(NA)
 for(i in 1:nrow(schooldata)){
-  if(schooldata$Rank[i] <= 5)
+  if(schooldata$Rank[i] <= 10)
   {
     schooldata$RankType[i] = "Ambitious"
-  } else if(schooldata$Rank[i] <=30 & schooldata$Rank[i] > 5)
+  } else if(schooldata$Rank[i] <=30 & schooldata$Rank[i] > 10)
   {
     schooldata$RankType[i] = "Mid Level"
   } else schooldata$RankType[i] = "Safe"
@@ -64,12 +64,10 @@ ui <- navbarPage(theme=shinytheme("flatly"),
       ),
       fluidRow(column(width=12,div(style="height:30px;"))),
       fluidRow(
-        column(width=4,offset=4,div(style="height:100px",p("Our project takes all available data on colleges and universities across US and creates a useful 
-                                                           shiny app that allows users to explore and compare schools based on user-specific filtering criteria. 
-                                                           The purpose of our design is to provide users with a 
-                                                           bird's eye view of New York colleges and universities; 
-                                                           allow them to filter, search, and group schools by their preferred criteria; 
-                                                           and further compare two schools on a more micro level.",align="center",style="color:#e6e6e6")))
+        column(width=4,offset=4,div(style="height:100px",p("Our project takes all available data on colleges and universities across US and creates a 
+                                                           useful shiny app that allows users to explore, compare and recommend the same. 
+                                                           Our users can be anybody from prospective students, concerned parents and anybody 
+                                                           else who wishes to see the landscape of college education in the United States.",align="center",style="color:#e6e6e6")))
         ),
       fluidRow(column(width=12,div(style="height:300px;"))
               )
@@ -129,7 +127,7 @@ ui <- navbarPage(theme=shinytheme("flatly"),
                                             ),
                                               
                                   bsCollapsePanel(tags$strong("School Level",style="font-family:Raleway;"),style="info",
-                                                  fluidRow(column(10,checkboxGroupInput("RankType",tags$strong("School Level",style="font-family:Raleway;"),choices = c('Ambitious', 'Mid Level', 'Safe'),selected = c(1:4)))
+                                                  fluidRow(column(10,radioButtons("RankType",tags$strong("School Level",style="font-family:Raleway;"),choices = c('Ambitious', 'Mid Level', 'Safe'),selected = "Ambitious"))
                                                   )
                                             
                                             
