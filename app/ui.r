@@ -99,7 +99,7 @@ ui <- navbarPage(theme=shinytheme("flatly"),
                                              
                                              bsCollapsePanel(tags$strong("Location Preference",style="font-family:Raleway;"),style = "primary",
                                                              bsCollapsePanel(tags$strong("City Type",style="font-family:Raleway;"),style="info",
-                                                                             fluidRow(column(10,checkboxGroupInput("Citytype",tags$strong("Preference",style="font-family:Raleway;"),choices = c('Suburb','City','Town','Rural'),selected = "City"))
+                                                                             fluidRow(column(10,radioButtons("Citytype",tags$strong("Preference",style="font-family:Raleway;"),choices = c('Suburb','City','Town','Rural'),selected = "City"))
                                                                              )
                                                              ),
                                                              bsCollapsePanel(tags$strong("Crime Rate",style="font-family:Raleway;"),style="info",
