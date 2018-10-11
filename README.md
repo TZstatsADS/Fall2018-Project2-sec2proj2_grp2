@@ -16,9 +16,9 @@ Term: Fall 2018
 	+  Zhong, Chenzhong cz2486@columbia.edu
 	+  Zhong, Qingyang qz2317@columbia.edu
 
-+ **Project summary**:In this project we develop a version 2.0 of an *Exploratory Data Analysis and Visualization* shiny app on a topic of New York school. Our project takes all available data on colleges and universities in New York State and creates a useful shiny app that allows users to explore and compare schools based on user-specific filtering criteria. The purpose of our design is to provide users with a bird's eye view of New York colleges and universities; allow them to filter, search, and group schools by their preferred criteria; and further compare two schools on a more micro level.
++ **Project summary**:Our project takes all available data on colleges and universities across US and creates a useful shiny app that allows users to explore, compare and recommend the same. Our users can be anybody from prospective students, concerned parents and anybody else who wishes to see the landscape of college education in the United States.
 
-+ **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
++ **Contribution statement**: (In order of alphabetical order) Yang Cai worked on the Recommendations, Comparison and Combination of the UI. Yang Chen worked on the Map and Comparison. Atishay Sehgal worked on the Map, Comparison and Presentation. Chenzhong Zhong worked on the Comparison. All team members approve our work presented in this GitHub repository including this contributions statement. 
 
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
 
